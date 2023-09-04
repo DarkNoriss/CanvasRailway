@@ -2,9 +2,11 @@
   "name": "meowvas-server",
   "version": "1.0.0",
   "description": "",
-  "main": "index.ts",
+  "main": "index.js",
   "scripts": {
-    "dev": "nodemon"
+    "dev": "nodemon",
+    "build": "rimraf build && tsc",
+    "start": "pnpm run build && node build/server.js"
   },
   "keywords": [],
   "author": "DarkNoriss",
