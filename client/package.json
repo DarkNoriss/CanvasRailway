@@ -1,5 +1,5 @@
 {
-  "name": "next-js-boilerplate",
+  "name": "meowvas-client",
   "version": "3.14.0",
   "scripts": {
     "dev": "next dev",
