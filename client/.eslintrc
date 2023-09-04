@@ -33,7 +33,7 @@
       ],
       "parserOptions": {
         "project": "tsconfig.json",
-        "tsconfigRootDir": "client",
+        "tsconfigRootDir": "./",
         "sourceType": "module"
       },
       "rules": {
