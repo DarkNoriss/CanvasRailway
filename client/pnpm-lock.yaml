@@ -6,7 +6,7 @@ settings:
 
 dependencies:
   '@hookform/resolvers':
-    specifier: ^3.3.1
+    specifier: 3.3.1
     version: 3.3.1(react-hook-form@7.46.1)
   '@radix-ui/react-label':
     specifier: ^2.0.2
