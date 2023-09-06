@@ -7,17 +7,23 @@ import type * as z from 'zod';
 import { Button } from '@/components/ui/Button';
 import { createRoomSchema } from '@/lib/validations/createRoom';
 
-import { Form } from './ui/Form';
+import { Form, FormControl, FormField, FormItem, FormLabel } from './ui/Form';
+import { Input } from './ui/Input';
 
-const CreateRoomForm = () => {
-  const form = useForm<z.infer<typeof createRoomSchema>>({
+type RoomType = z.infer<typeof createRoomSchema>;
+
+const CreateRoomForm = ({ roomId }: { roomId: string }) => {
+  const form = useForm<RoomType>({
     resolver: zodResolver(createRoomSchema),
     defaultValues: {
       username: '',
+      roomId,
     },
   });
 
-  const onSubmit = () => {};
+  const onSubmit = (values: RoomType) => {
+    console.log(values);
+  };
 
   return (
     <Form {...form}>
@@ -25,8 +31,31 @@ const CreateRoomForm = () => {
         onSubmit={form.handleSubmit(onSubmit)}
         className="flex flex-col gap-4"
       >
-        <h2>Form!!!</h2>
-        <Button>CREATE A ROOM</Button>
+        <FormField
+          control={form.control}
+          name="username"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel className="text-foreground">Username</FormLabel>
+              <FormControl>
+                <Input placeholder="Enter your username" {...field} />
+              </FormControl>
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="roomId"
+          render={() => (
+            <FormItem>
+              <FormLabel className="text-foreground">Room ID</FormLabel>
+              <FormControl>
+                <Input value={roomId} readOnly />
+              </FormControl>
+            </FormItem>
+          )}
+        />
+        <Button type="submit">CREATE A ROOM</Button>
       </form>
     </Form>
   );
