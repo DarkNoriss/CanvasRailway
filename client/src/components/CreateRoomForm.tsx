@@ -2,17 +2,18 @@
 
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
-import type * as z from 'zod';
 
 import { Button } from '@/components/ui/Button';
 import { createRoomSchema } from '@/lib/validations/createRoom';
+import type { RoomType } from '@/types/form';
 
+import CopyButton from './CopyButton';
 import { Form, FormControl, FormField, FormItem, FormLabel } from './ui/Form';
 import { Input } from './ui/Input';
 
-type RoomType = z.infer<typeof createRoomSchema>;
+type CreateRoomFormProps = { roomId: string };
 
-const CreateRoomForm = ({ roomId }: { roomId: string }) => {
+const CreateRoomForm = ({ roomId }: CreateRoomFormProps) => {
   const form = useForm<RoomType>({
     resolver: zodResolver(createRoomSchema),
     defaultValues: {
@@ -22,7 +23,7 @@ const CreateRoomForm = ({ roomId }: { roomId: string }) => {
   });
 
   const onSubmit = (values: RoomType) => {
-    console.log(values);
+    return values;
   };
 
   return (
@@ -50,7 +51,10 @@ const CreateRoomForm = ({ roomId }: { roomId: string }) => {
             <FormItem>
               <FormLabel className="text-foreground">Room ID</FormLabel>
               <FormControl>
-                <Input value={roomId} readOnly />
+                <div className="flex h-10 w-full items-center justify-between rounded-md border bg-background px-3 py-2 text-sm text-muted-foreground">
+                  <span>{roomId}</span>
+                  <CopyButton value={roomId} />
+                </div>
               </FormControl>
             </FormItem>
           )}
