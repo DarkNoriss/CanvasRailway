@@ -4,7 +4,6 @@ import '@/styles/global.css';
 
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
-import type { FC } from 'react';
 
 import { cn } from '@/lib/utils';
 
@@ -15,11 +14,9 @@ export const metadata: Metadata = {
   description: 'Meowvas, draw with ur frens!',
 };
 
-type RootLayoutProps = {
-  children: React.ReactNode;
-};
+type RootLayoutProps = { children: React.ReactNode };
 
-const RootLayout: FC<RootLayoutProps> = ({ children }) => {
+const RootLayout = ({ children }: RootLayoutProps) => {
   return (
     <html lang="en">
       <body className={cn('bg-gray-700 text-gray-200', inter.className)}>
