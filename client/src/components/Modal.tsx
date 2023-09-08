@@ -1,9 +1,21 @@
-import type { FC } from 'react';
+'use client';
 
-type ModalProps = {};
+import JoinRoomForm from './JoinRoomForm';
+import { Button } from './ui/Button';
+import { Dialog, DialogContent, DialogTrigger } from './ui/Dialog';
 
-const Modal: FC<ModalProps> = ({}) => {
-  return <div>Modal</div>;
+const Modal = () => {
+  return (
+    <Dialog>
+      <DialogTrigger asChild>
+        <Button type="button">JOIN A ROOM</Button>
+      </DialogTrigger>
+
+      <DialogContent className="sm:max-w-sm">
+        <JoinRoomForm />
+      </DialogContent>
+    </Dialog>
+  );
 };
 
 export default Modal;
