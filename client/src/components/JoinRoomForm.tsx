@@ -1,17 +1,23 @@
-import { zodResolver } from '@hookform/resolvers/zod';
-import { Form, useForm } from 'react-hook-form';
+'use client';
 
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useForm } from 'react-hook-form';
+
+import { Button } from '@/components/ui/Button';
 import { createRoomSchema } from '@/lib/validations/createRoom';
 import type { RoomType } from '@/types/form';
 
-import CopyButton from './CopyButton';
-import { Button } from './ui/Button';
-import { FormControl, FormField, FormItem, FormLabel } from './ui/Form';
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from './ui/Form';
 import { Input } from './ui/Input';
 
-type JoinRoomFormProps = { roomId: string };
-
-const JoinRoomForm = ({ roomId }: JoinRoomFormProps) => {
+const JoinRoomForm = () => {
   const form = useForm<RoomType>({
     resolver: zodResolver(createRoomSchema),
     defaultValues: {
@@ -37,27 +43,34 @@ const JoinRoomForm = ({ roomId }: JoinRoomFormProps) => {
             <FormItem>
               <FormLabel className="text-foreground">Username</FormLabel>
               <FormControl>
-                <Input placeholder="Enter your username" {...field} />
+                <Input
+                  placeholder="Enter your username"
+                  className="text-black"
+                  {...field}
+                />
               </FormControl>
+              <FormMessage className="text-xs" />
             </FormItem>
           )}
         />
         <FormField
           control={form.control}
           name="roomId"
-          render={() => (
+          render={({ field }) => (
             <FormItem>
               <FormLabel className="text-foreground">Room ID</FormLabel>
               <FormControl>
-                <div className="flex h-10 w-full items-center justify-between rounded-md border bg-background px-3 py-2 text-sm text-muted-foreground">
-                  <span>{roomId}</span>
-                  <CopyButton value={roomId} />
-                </div>
+                <Input
+                  placeholder="Enter room ID"
+                  className="text-black"
+                  {...field}
+                />
               </FormControl>
+              <FormMessage className="text-xs" />
             </FormItem>
           )}
         />
-        <Button type="submit">CREATE A ROOM</Button>
+        <Button type="submit">JOIN A ROOM</Button>
       </form>
     </Form>
   );
