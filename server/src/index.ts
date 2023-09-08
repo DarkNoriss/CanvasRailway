@@ -1,6 +1,7 @@
 import express from 'express'
 import http from 'http'
 import { Server } from 'socket.io'
+import { DrawLine, RoomData } from './types'
 
 const app = express()
 const server = http.createServer(app)
@@ -11,24 +12,12 @@ const io = new Server(server, {
   },
 })
 
-type RGBColor = {
-  a?: number | undefined
-  b: number
-  g: number
-  r: number
-}
-
-type DrawLine = {
-  prevPoint: Point | null
-  currentPoint: Point
-  color: RGBColor
-  width: number
-}
-
-type Point = { x: number; y: number }
-
 io.on('connection', socket => {
   console.log('connection')
+
+  socket.on('create-room', ({roomId, username}: RoomData) => {
+    console.log(roomId)
+  })
 
   socket.on('client-ready', () => {
     socket.broadcast.emit('get-canvas-state')
