@@ -1,7 +1,7 @@
 import { nanoid } from 'nanoid';
 
 import CreateRoomForm from '@/components/CreateRoomForm';
-import { Button } from '@/components/ui/Button';
+import Modal from '@/components/Modal';
 import {
   Card,
   CardContent,
@@ -27,7 +27,7 @@ const Page = () => {
           <span className="text-xs text-muted-foreground">OR</span>
           <Separator decorative />
         </div>
-        <Button>JOIN A ROOM</Button>
+        <Modal />
       </CardContent>
     </Card>
   );
