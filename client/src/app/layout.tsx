@@ -1,5 +1,3 @@
-'use client';
-
 import '@/styles/global.css';
 
 import type { Metadata } from 'next';
@@ -19,7 +17,7 @@ type RootLayoutProps = { children: React.ReactNode };
 const RootLayout = ({ children }: RootLayoutProps) => {
   return (
     <html lang="en">
-      <body className={cn('bg-gray-700 text-gray-200', inter.className)}>
+      <body className={cn('bg-gray-800 text-gray-200', inter.className)}>
         <main className="container mx-auto flex h-screen items-center justify-center">
           {children}
         </main>
