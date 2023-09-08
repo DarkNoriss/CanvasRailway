@@ -1,19 +1,31 @@
 'use client';
 
 import { zodResolver } from '@hookform/resolvers/zod';
+import { Loader2 } from 'lucide-react';
+import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 
 import { Button } from '@/components/ui/Button';
+import { socket } from '@/lib/socket';
 import { createRoomSchema } from '@/lib/validations/createRoom';
 import type { RoomType } from '@/types/form';
 
 import CopyButton from './CopyButton';
-import { Form, FormControl, FormField, FormItem, FormLabel } from './ui/Form';
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from './ui/Form';
 import { Input } from './ui/Input';
 
 type CreateRoomFormProps = { roomId: string };
 
 const CreateRoomForm = ({ roomId }: CreateRoomFormProps) => {
+  const [isLoading, setIsLoading] = useState(false);
+
   const form = useForm<RoomType>({
     resolver: zodResolver(createRoomSchema),
     defaultValues: {
@@ -23,7 +35,8 @@ const CreateRoomForm = ({ roomId }: CreateRoomFormProps) => {
   });
 
   const onSubmit = (values: RoomType) => {
-    return values;
+    socket.emit('create-room', values);
+    setIsLoading(true);
   };
 
   return (
@@ -41,6 +54,7 @@ const CreateRoomForm = ({ roomId }: CreateRoomFormProps) => {
               <FormControl>
                 <Input placeholder="Enter your username" {...field} />
               </FormControl>
+              <FormMessage className="text-xs" />
             </FormItem>
           )}
         />
@@ -56,10 +70,17 @@ const CreateRoomForm = ({ roomId }: CreateRoomFormProps) => {
                   <CopyButton value={roomId} />
                 </div>
               </FormControl>
+              <FormMessage className="text-xs" />
             </FormItem>
           )}
         />
-        <Button type="submit">CREATE A ROOM</Button>
+        <Button type="submit" disabled={isLoading}>
+          {isLoading ? (
+            <Loader2 className="h-4 w-4 animate-spin" />
+          ) : (
+            'CREATE A ROOM'
+          )}
+        </Button>
       </form>
     </Form>
   );
