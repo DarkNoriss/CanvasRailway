@@ -2,7 +2,7 @@
   // Configuration for JavaScript files
   "extends": [
     "airbnb-base",
-    "next/core-web-vitals",
+    "next/core-web-vitals", // Needed to avoid warning in next.js build: 'The Next.js plugin was not detected in your ESLint configuration'
     "plugin:prettier/recommended"
   ],
   "rules": {
@@ -10,7 +10,7 @@
       "error",
       {
         "singleQuote": true,
-        "endOfLine": "crlf"
+        "endOfLine": "auto"
       }
     ]
   },
@@ -32,16 +32,17 @@
         "plugin:prettier/recommended"
       ],
       "parserOptions": {
-        "project": "tsconfig.json"
+        "project": "./tsconfig.json"
       },
       "rules": {
         "prettier/prettier": [
           "error",
           {
             "singleQuote": true,
-            "endOfLine": "crlf"
+            "endOfLine": "auto"
           }
         ],
+        "import/extensions": "off", // Avoid missing file extension errors, TypeScript already provides a similar feature
         "react/function-component-definition": "off", // Disable Airbnb's specific function type
         "react/destructuring-assignment": "off", // Vscode doesn't support automatically destructuring, it's a pain to add a new variable
         "react/require-default-props": "off", // Allow non-defined react props as undefined
@@ -63,6 +64,39 @@
         "unused-imports/no-unused-vars": [
           "error",
           { "argsIgnorePattern": "^_" }
+        ]
+      }
+    },
+    // Configuration for testing
+    {
+      "files": ["**/*.test.ts", "**/*.test.tsx"],
+      "plugins": ["jest", "jest-formatting", "testing-library", "jest-dom"],
+      "extends": [
+        "plugin:jest/recommended",
+        "plugin:jest-formatting/recommended",
+        "plugin:testing-library/react",
+        "plugin:jest-dom/recommended"
+      ]
+    },
+    // Configuration for e2e testing (Cypress)
+    {
+      "files": ["cypress/**/*.ts"],
+      "plugins": ["cypress"],
+      "extends": ["plugin:cypress/recommended"],
+      "parserOptions": {
+        "project": "./cypress/tsconfig.json"
+      }
+    },
+    // Configuration for Storybook
+    {
+      "files": ["*.stories.*"],
+      "extends": ["plugin:storybook/recommended"],
+      "rules": {
+        "import/no-extraneous-dependencies": [
+          "error",
+          {
+            "devDependencies": true
+          }
         ]
       }
     }
