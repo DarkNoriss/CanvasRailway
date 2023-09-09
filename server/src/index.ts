@@ -42,8 +42,9 @@ const leaveRoom = (socket: Socket) => {
 io.on('connection', socket => {
   console.log('connected', socket.id)
 
-  socket.on('create-room', ({roomId, username}: RoomData) => {
-    console.log(roomId)
+  socket.on('create-room', ({ roomId, username }: RoomData) => {
+    joinRoom(socket, roomId, username)
+    // console.log(roomId)
   })
 
   socket.on('client-ready', () => {
