@@ -1,5 +1,6 @@
 'use client';
 
+import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import type { ColorResult } from 'react-color';
 import { SketchPicker } from 'react-color';
@@ -9,6 +10,7 @@ import { Slider } from '@/components/ui/Slider';
 import { useDraw } from '@/hooks/useDraw';
 import { drawLine } from '@/lib/drawLine';
 import { socket } from '@/lib/socket';
+import { useUserStore } from '@/store/userStore';
 
 type DrawLine = Draw & {
   color: ColorResult['rgb'];
@@ -16,6 +18,10 @@ type DrawLine = Draw & {
 };
 
 const Page = () => {
+  const router = useRouter();
+
+  const user = useUserStore((state) => state.user);
+
   const [colorClient, setColorClient] = useState<ColorResult['rgb']>({
     r: 0,
     g: 0,
@@ -23,6 +29,10 @@ const Page = () => {
     a: 1,
   });
   const [widthClient, setWidthClient] = useState<number>(5);
+
+  useEffect(() => {
+    if (!user) router.replace('/');
+  }, [router, user]);
 
   const createLine = ({ prevPoint, currentPoint, ctx }: Draw) => {
     socket.emit('draw-line', {
@@ -99,7 +109,7 @@ const Page = () => {
           min={1}
         />
         <button
-          className="rounded-sm bg-gray-800 px-4 py-2"
+          className="rounded-sm bg-gray-600 px-4 py-2"
           type="button"
           onClick={() => socket.emit('clear')}
         >
