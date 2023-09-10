@@ -1,16 +1,12 @@
-'use client';
-
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Loader2 } from 'lucide-react';
-import { useState } from 'react';
+import { nanoid } from 'nanoid';
+import { useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 
+import CopyButton from '@/components/CopyButton';
 import { Button } from '@/components/ui/Button';
-import { socket } from '@/lib/socket';
-import { createRoomSchema } from '@/lib/validations/createRoom';
-import type { RoomType } from '@/types/form';
-
-import CopyButton from './CopyButton';
 import {
   Form,
   FormControl,
@@ -18,21 +14,44 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from './ui/Form';
-import { Input } from './ui/Input';
+} from '@/components/ui/Form';
+import { Input } from '@/components/ui/Input';
+import { socket } from '@/lib/socket';
+import { createRoomSchema } from '@/lib/validations/createRoom';
+import { useMembersStore } from '@/store/membersStore';
+import { useUserStore } from '@/store/userStore';
+import type { RoomType } from '@/types/form';
 
-type CreateRoomFormProps = { roomId: string };
+const CreateRoomForm = () => {
+  const router = useRouter();
 
-const CreateRoomForm = ({ roomId }: CreateRoomFormProps) => {
-  const [isLoading, setIsLoading] = useState(false);
+  const setUser = useUserStore((state) => state.setUser);
+  const setMembers = useMembersStore((state) => state.setMembers);
+
+  const [genRoomId, setGenRoomId] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const form = useForm<RoomType>({
     resolver: zodResolver(createRoomSchema),
     defaultValues: {
       username: '',
-      roomId,
+      roomId: nanoid(),
     },
   });
+
+  useEffect(() => {
+    if (!genRoomId) setGenRoomId(nanoid());
+
+    socket.on('room-joined', ({ user, roomId, members }) => {
+      setUser(user);
+      setMembers(members);
+      router.replace(`./room/${roomId}`);
+    });
+
+    return () => {
+      socket.off('room-joined');
+    };
+  }, [genRoomId, router, setMembers, setUser]);
 
   const onSubmit = (values: RoomType) => {
     socket.emit('create-room', values);
@@ -66,8 +85,12 @@ const CreateRoomForm = ({ roomId }: CreateRoomFormProps) => {
               <FormLabel className="text-foreground">Room ID</FormLabel>
               <FormControl>
                 <div className="flex h-10 w-full items-center justify-between rounded-md border bg-background px-3 py-2 text-sm text-muted-foreground">
-                  <span>{roomId}</span>
-                  <CopyButton value={roomId} />
+                  {genRoomId && (
+                    <>
+                      <span>{genRoomId}</span>
+                      <CopyButton value={genRoomId} />
+                    </>
+                  )}
                 </div>
               </FormControl>
               <FormMessage className="text-xs" />
