@@ -1,4 +1,6 @@
 import { zodResolver } from '@hookform/resolvers/zod';
+import { Loader2 } from 'lucide-react';
+import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 
 import { Button } from '@/components/ui/Button';
@@ -16,6 +18,8 @@ import { createRoomSchema } from '@/lib/validations/createRoom';
 import type { RoomType } from '@/types/form';
 
 const JoinRoomForm = () => {
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+
   const form = useForm<RoomType>({
     resolver: zodResolver(createRoomSchema),
     defaultValues: {
@@ -26,10 +30,7 @@ const JoinRoomForm = () => {
 
   const onSubmit = (values: RoomType) => {
     socket.emit('create-room', values);
-    socket.on('', () => {
-      console.log('onSubmit');
-    });
-    return values;
+    setIsLoading(true);
   };
 
   return (
@@ -72,7 +73,13 @@ const JoinRoomForm = () => {
             </FormItem>
           )}
         />
-        <Button type="submit">JOIN A ROOM</Button>
+        <Button type="submit" disabled={isLoading}>
+          {isLoading ? (
+            <Loader2 className="h-4 w-4 animate-spin" />
+          ) : (
+            'JOIN A ROOM'
+          )}
+        </Button>
       </form>
     </Form>
   );
