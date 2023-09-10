@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 
-type User = {
+export type User = {
   id: string;
   username: string;
 };
@@ -10,7 +10,7 @@ type UserStoreType = {
   setUser: (user: User) => void;
 };
 
-export const userStore = create<UserStoreType>((set) => ({
+export const useUserStore = create<UserStoreType>((set) => ({
   user: null,
   setUser: (user) => set({ user }),
 }));
