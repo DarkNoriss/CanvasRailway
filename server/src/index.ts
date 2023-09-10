@@ -3,7 +3,7 @@ import http from 'http'
 import { Server, Socket } from 'socket.io'
 import type
 { DrawLine, RoomData } from './types'
-import { addUser, getRoomMembers } from './data/users'
+import { addUser, getRoomMembers, getUser, removeUser } from './data/users'
 
 const app = express()
 const server = http.createServer(app)
@@ -35,8 +35,20 @@ const joinRoom = (socket: Socket, roomId: string, username: string) => {
 }
 
 const leaveRoom = (socket: Socket) => {
-  console.log("disconnected")
-  
+  const user = getUser(socket.id)
+  if(!user) return
+
+  const {id, roomId, username } = user
+
+  removeUser(id)
+  const members = getRoomMembers(roomId)
+
+  socket.to(roomId).emit('update-members', members)
+  socket.to(roomId).emit('send-notification', {
+    title: "Member departure!",
+    message: `${username} left the room.`
+  })
+  socket.leave(roomId)
 }
 
 io.on('connection', socket => {
@@ -44,7 +56,6 @@ io.on('connection', socket => {
 
   socket.on('create-room', ({ roomId, username }: RoomData) => {
     joinRoom(socket, roomId, username)
-    // console.log(roomId)
   })
 
   socket.on('client-ready', () => {
@@ -67,7 +78,6 @@ io.on('connection', socket => {
   socket.on('clear', () => socket.emit('clear'))
 
   socket.on('disconnect', () => {
-    socket.emit('disconnected')
     leaveRoom(socket)
   })
 })
