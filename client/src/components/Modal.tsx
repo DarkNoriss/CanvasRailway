@@ -1,8 +1,6 @@
-'use client';
-
-import JoinRoomForm from './JoinRoomForm';
-import { Button } from './ui/Button';
-import { Dialog, DialogContent, DialogTrigger } from './ui/Dialog';
+import JoinRoomForm from '@/components/JoinRoomForm';
+import { Button } from '@/components/ui/Button';
+import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/Dialog';
 
 const Modal = () => {
   return (
