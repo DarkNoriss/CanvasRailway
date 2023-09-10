@@ -1,12 +1,7 @@
-'use client';
-
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 
 import { Button } from '@/components/ui/Button';
-import { createRoomSchema } from '@/lib/validations/createRoom';
-import type { RoomType } from '@/types/form';
-
 import {
   Form,
   FormControl,
@@ -14,8 +9,11 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from './ui/Form';
-import { Input } from './ui/Input';
+} from '@/components/ui/Form';
+import { Input } from '@/components/ui/Input';
+import { socket } from '@/lib/socket';
+import { createRoomSchema } from '@/lib/validations/createRoom';
+import type { RoomType } from '@/types/form';
 
 const JoinRoomForm = () => {
   const form = useForm<RoomType>({
@@ -27,6 +25,10 @@ const JoinRoomForm = () => {
   });
 
   const onSubmit = (values: RoomType) => {
+    socket.emit('create-room', values);
+    socket.on('', () => {
+      console.log('onSubmit');
+    });
     return values;
   };
 
