@@ -1,4 +1,4 @@
-import { nanoid } from 'nanoid';
+'use client';
 
 import CreateRoomForm from '@/components/CreateRoomForm';
 import Modal from '@/components/Modal';
@@ -12,8 +12,6 @@ import {
 import { Separator } from '@/components/ui/Separator';
 
 const Page = () => {
-  const roomId = nanoid();
-
   return (
     <Card className="w-[90vw] max-w-sm">
       <CardHeader>
@@ -21,7 +19,7 @@ const Page = () => {
         <CardDescription>Draw with ur frens!</CardDescription>
       </CardHeader>
       <CardContent className="flex flex-col space-y-4">
-        <CreateRoomForm roomId={roomId} />
+        <CreateRoomForm />
         <div className="  flex items-center space-x-2">
           <Separator decorative />
           <span className="text-xs text-muted-foreground">OR</span>
