@@ -3,7 +3,6 @@
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import type { ColorResult } from 'react-color';
-import { SketchPicker } from 'react-color';
 
 import { Cursor } from '@/components/ui/Cursor';
 import { Slider } from '@/components/ui/Slider';
@@ -99,10 +98,10 @@ const Page = () => {
     <div className="flex flex-row gap-4">
       <Cursor size={widthClient} />
       <div className="flex flex-col items-center justify-center gap-8">
-        <SketchPicker
+        {/* <SketchPicker
           color={colorClient}
           onChange={(newColor: ColorResult) => setColorClient(newColor.rgb)}
-        />
+        /> */}
         <Slider
           defaultValue={[widthClient]}
           onValueChange={(value) => setWidthClient(value[0] ?? 5)}
