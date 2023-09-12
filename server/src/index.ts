@@ -38,7 +38,7 @@ const leaveRoom = (socket: Socket) => {
   const user = getUser(socket.id)
   if(!user) return
 
-  const {id, roomId, username } = user
+  const { id, roomId, username } = user
 
   removeUser(id)
   const members = getRoomMembers(roomId)
