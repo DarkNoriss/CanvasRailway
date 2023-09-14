@@ -16,7 +16,7 @@ const Page = () => {
     <Card className="w-[90vw] max-w-sm">
       <CardHeader>
         <CardTitle>Meowvas</CardTitle>
-        <CardDescription>Draw with ur frens!</CardDescription>
+        <CardDescription>Draw with ur frens! Yipeeeeeeeeeeeee!</CardDescription>
       </CardHeader>
       <CardContent className="flex flex-col space-y-4">
         <CreateRoomForm />
