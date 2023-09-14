@@ -17,7 +17,7 @@ import {
 } from '@/components/ui/Form';
 import { Input } from '@/components/ui/Input';
 import { socket } from '@/lib/socket';
-import { createRoomSchema } from '@/lib/validations/createRoom';
+import { createRoomSchema } from '@/lib/validations/roomForm';
 import { useMembersStore } from '@/store/membersStore';
 import { useUserStore } from '@/store/userStore';
 import type { RoomType } from '@/types/form';
@@ -35,7 +35,6 @@ const CreateRoomForm = () => {
     resolver: zodResolver(createRoomSchema),
     defaultValues: {
       username: '',
-      roomId: nanoid(),
     },
   });
 
@@ -54,7 +53,10 @@ const CreateRoomForm = () => {
   }, [genRoomId, router, setMembers, setUser]);
 
   const onSubmit = (values: RoomType) => {
-    socket.emit('create-room', values);
+    const roomId = genRoomId;
+    const { username } = values;
+
+    socket.emit('create-room', { roomId, username });
     setIsLoading(true);
   };
 
