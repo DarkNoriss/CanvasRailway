@@ -1,6 +1,6 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Loader2 } from 'lucide-react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 
 import { Button } from '@/components/ui/Button';
@@ -28,8 +28,18 @@ const JoinRoomForm = () => {
     },
   });
 
+  useEffect(() => {
+    socket.on('join-room-failed', () => {
+      setIsLoading(false);
+    });
+
+    return () => {
+      socket.off('join-room-failed');
+    };
+  }, []);
+
   const onSubmit = (values: RoomType) => {
-    socket.emit('create-room', values);
+    socket.emit('join-room', values);
     setIsLoading(true);
   };
 
