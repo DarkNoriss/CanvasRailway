@@ -1,8 +1,10 @@
 'use client';
 
+import 'react-color-palette/css';
+
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import type { ColorResult } from 'react-color';
+import { ColorPicker, useColor } from 'react-color-palette';
 
 import { Cursor } from '@/components/ui/Cursor';
 import { Slider } from '@/components/ui/Slider';
@@ -10,23 +12,14 @@ import { useDraw } from '@/hooks/useDraw';
 import { drawLine } from '@/lib/drawLine';
 import { socket } from '@/lib/socket';
 import { useUserStore } from '@/store/userStore';
-
-type DrawLine = Draw & {
-  color: ColorResult['rgb'];
-  width: number;
-};
+import type { Draw, DrawLine } from '@/types/typing';
 
 const Page = () => {
   const router = useRouter();
 
   const user = useUserStore((state) => state.user);
 
-  const [colorClient, setColorClient] = useState<ColorResult['rgb']>({
-    r: 0,
-    g: 0,
-    b: 0,
-    a: 1,
-  });
+  const [colorClient, setColorClient] = useColor('black');
   const [widthClient, setWidthClient] = useState<number>(5);
 
   useEffect(() => {
@@ -98,10 +91,11 @@ const Page = () => {
     <div className="flex flex-row gap-4">
       <Cursor size={widthClient} />
       <div className="flex flex-col items-center justify-center gap-8">
-        {/* <SketchPicker
+        <ColorPicker
           color={colorClient}
-          onChange={(newColor: ColorResult) => setColorClient(newColor.rgb)}
-        /> */}
+          onChange={setColorClient}
+          hideInput={['hsv']}
+        />
         <Slider
           defaultValue={[widthClient]}
           onValueChange={(value) => setWidthClient(value[0] ?? 5)}
