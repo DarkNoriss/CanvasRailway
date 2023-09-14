@@ -38,8 +38,8 @@ const joinRoom = (socket: Socket, roomId: string, username: string) => {
 const checkRoom = (socket: Socket, roomId: string, username: string) => {
   const members = getRoomMembers(roomId)
 
-  if (members) return socket.emit('join-room-failed')
-
+  if (members.length <= 0) return socket.emit('join-room-failed')
+  
   joinRoom(socket, roomId, username)
 }
 
@@ -61,9 +61,7 @@ const leaveRoom = (socket: Socket) => {
 }
 
 io.on('connection', socket => {
-  console.log('connected', socket.id)
-
-  socket.on('create-room', ({ roomId, username }: RoomData) => {
+  socket.on('create-room', ({ roomId, username }: RoomData ) => {
     joinRoom(socket, roomId, username)
   })
 
