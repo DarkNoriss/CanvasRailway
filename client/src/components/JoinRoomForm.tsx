@@ -15,7 +15,7 @@ import {
 import { Input } from '@/components/ui/Input';
 import { useToast } from '@/hooks/useToast';
 import { socket } from '@/lib/socket';
-import { createRoomSchema } from '@/lib/validations/createRoom';
+import { joinRoomSchema } from '@/lib/validations/roomForm';
 import type { RoomType } from '@/types/form';
 
 const JoinRoomForm = () => {
@@ -24,7 +24,7 @@ const JoinRoomForm = () => {
   const { toast } = useToast();
 
   const form = useForm<RoomType>({
-    resolver: zodResolver(createRoomSchema),
+    resolver: zodResolver(joinRoomSchema),
     defaultValues: {
       username: '',
       roomId: '',
