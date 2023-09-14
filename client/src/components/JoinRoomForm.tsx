@@ -13,12 +13,15 @@ import {
   FormMessage,
 } from '@/components/ui/Form';
 import { Input } from '@/components/ui/Input';
+import { useToast } from '@/hooks/useToast';
 import { socket } from '@/lib/socket';
 import { createRoomSchema } from '@/lib/validations/createRoom';
 import type { RoomType } from '@/types/form';
 
 const JoinRoomForm = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
+
+  const { toast } = useToast();
 
   const form = useForm<RoomType>({
     resolver: zodResolver(createRoomSchema),
@@ -31,12 +34,18 @@ const JoinRoomForm = () => {
   useEffect(() => {
     socket.on('join-room-failed', () => {
       setIsLoading(false);
+      toast({
+        title: 'Join room failed!',
+        description:
+          'The room ID you entered is incorrect. Please check and try again.',
+        variant: 'destructive',
+      });
     });
 
     return () => {
       socket.off('join-room-failed');
     };
-  }, []);
+  }, [toast]);
 
   const onSubmit = (values: RoomType) => {
     socket.emit('join-room', values);
@@ -83,7 +92,7 @@ const JoinRoomForm = () => {
             </FormItem>
           )}
         />
-        <Button type="submit" disabled={isLoading}>
+        <Button type="submit" disabled={isLoading} className="mt-2">
           {isLoading ? (
             <Loader2 className="h-4 w-4 animate-spin" />
           ) : (
