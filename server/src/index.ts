@@ -1,6 +1,7 @@
 import express from 'express'
 import http from 'http'
 import { Server, Socket } from 'socket.io'
+import { instrument } from '@socket.io/admin-ui'
 import type
 { DrawLine, RoomData } from './types'
 import { addUser, getRoomMembers, getUser, removeUser } from './data/users'
@@ -34,9 +35,17 @@ const joinRoom = (socket: Socket, roomId: string, username: string) => {
   })
 }
 
+const checkRoom = (socket: Socket, roomId: string, username: string) => {
+  const members = getRoomMembers(roomId)
+
+  if (members) return socket.emit('join-room-failed')
+
+  joinRoom(socket, roomId, username)
+}
+
 const leaveRoom = (socket: Socket) => {
   const user = getUser(socket.id)
-  if(!user) return
+  if (!user) return
 
   const { id, roomId, username } = user
 
@@ -56,6 +65,10 @@ io.on('connection', socket => {
 
   socket.on('create-room', ({ roomId, username }: RoomData) => {
     joinRoom(socket, roomId, username)
+  })
+
+  socket.on('join-room', ({ roomId, username }: RoomData) => {
+    checkRoom(socket, roomId, username)
   })
 
   socket.on('client-ready', () => {
@@ -80,6 +93,10 @@ io.on('connection', socket => {
   socket.on('disconnect', () => {
     leaveRoom(socket)
   })
+})
+
+instrument(io, {
+  auth: false
 })
 
 const PORT = process.env.PORT || 3001
