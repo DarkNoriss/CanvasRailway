@@ -1,20 +1,20 @@
-import { Slider } from '@radix-ui/react-slider';
 import { useState } from 'react';
 import { ColorPicker, useColor } from 'react-color-palette';
 
+import Canvas from '@/components/Canvas';
+import { Slider } from '@/components/ui/Slider';
 import { socket } from '@/lib/socket';
-
-import Canvas from './Canvas';
-import { Cursor } from './ui/Cursor';
+import { useMembersStore } from '@/store/membersStore';
 
 const GameRoom = () => {
   const [colorClient, setColorClient] = useColor('black');
   const [widthClient, setWidthClient] = useState<number>(5);
 
+  const members = useMembersStore((state) => state.members);
+
   return (
-    <div className="flex flex-row gap-4">
-      <Cursor size={widthClient} />
-      <div className="flex flex-col items-center justify-center gap-8">
+    <div className="flex w-full flex-row justify-center gap-4">
+      <div className="flex flex-col gap-8">
         <ColorPicker
           color={colorClient}
           onChange={setColorClient}
@@ -32,6 +32,11 @@ const GameRoom = () => {
         >
           Clear canvas
         </button>
+        <div className="flex flex-col">
+          {members.map(({ id, username }) => (
+            <span key={id}>{username}</span>
+          ))}
+        </div>
       </div>
       <Canvas colorClient={colorClient} widthClient={widthClient} />
     </div>
