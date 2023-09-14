@@ -97,7 +97,7 @@ const CreateRoomForm = () => {
             </FormItem>
           )}
         />
-        <Button type="submit" disabled={isLoading}>
+        <Button type="submit" disabled={isLoading} className="mt-2">
           {isLoading ? (
             <Loader2 className="h-4 w-4 animate-spin" />
           ) : (
