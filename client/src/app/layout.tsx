@@ -10,7 +10,7 @@ const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
   title: 'Meowvas',
-  description: 'Meowvas, draw with ur frens!',
+  description: 'Meowvas, draw with ur frens! Yipeeeeeeeeeeeee!',
 };
 
 type RootLayoutProps = { children: React.ReactNode };
