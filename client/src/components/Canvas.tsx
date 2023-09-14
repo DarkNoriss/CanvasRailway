@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import type { IColor } from 'react-color-palette';
 
+import { Cursor } from '@/components/ui/Cursor';
 import { useDraw } from '@/hooks/useDraw';
 import { drawLine } from '@/lib/drawLine';
 import { socket } from '@/lib/socket';
@@ -74,13 +75,16 @@ const Canvas = ({ colorClient, widthClient }: CanvasProps) => {
   }, [canvasRef, clear]);
 
   return (
-    <canvas
-      onMouseDown={onMouseDown}
-      ref={canvasRef}
-      width={750}
-      height={750}
-      className="rounded-sm border-black bg-gray-200"
-    />
+    <>
+      <Cursor size={widthClient} />
+      <canvas
+        onMouseDown={onMouseDown}
+        ref={canvasRef}
+        width={750}
+        height={750}
+        className="rounded-sm border-black bg-gray-200"
+      />
+    </>
   );
 };
 
