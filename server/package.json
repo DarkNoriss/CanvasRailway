@@ -12,7 +12,9 @@
   "author": "DarkNoriss",
   "license": "ISC",
   "dependencies": {
+    "@socket.io/admin-ui": "^0.5.1",
     "express": "^4.18.2",
+    "react-color-palette": "^7.1.0",
     "socket.io": "^4.7.2",
     "ts-node": "^10.9.1"
   },

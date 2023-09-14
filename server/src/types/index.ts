@@ -1,3 +1,5 @@
+import type { IColor } from "react-color-palette";
+
 export type RoomData = {
   roomId: string;
   username: string
@@ -9,17 +11,10 @@ export type User = {
   roomId: string;
 }
 
-export type RGBColor = {
-  a?: number | undefined
-  b: number
-  g: number
-  r: number
-}
-
 export type DrawLine = {
   prevPoint: Point | null
   currentPoint: Point
-  color: RGBColor
+  color: IColor;
   width: number
 }
 
