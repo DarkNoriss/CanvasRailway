@@ -29,10 +29,6 @@ const joinRoom = (socket: Socket, roomId: string, username: string) => {
 
   socket.emit('room-joined', { user, roomId, members })
   socket.to(roomId).emit('update-members', members)
-  socket.to(roomId).emit('send-notification', {
-    title: "New member arrived!",
-    message: `${username} joined the room.`
-  })
 }
 
 const checkRoom = (socket: Socket, roomId: string, username: string) => {
@@ -53,10 +49,6 @@ const leaveRoom = (socket: Socket) => {
   const members = getRoomMembers(roomId)
 
   socket.to(roomId).emit('update-members', members)
-  socket.to(roomId).emit('send-notification', {
-    title: "Member departure!",
-    message: `${username} left the room.`
-  })
   socket.leave(roomId)
 }
 
