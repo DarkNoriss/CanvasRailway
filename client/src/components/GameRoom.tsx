@@ -1,3 +1,4 @@
+import { useParams } from 'next/navigation';
 import { useState } from 'react';
 import { ColorPicker, useColor } from 'react-color-palette';
 
@@ -9,6 +10,8 @@ import { useMembersStore } from '@/store/membersStore';
 const GameRoom = () => {
   const [colorClient, setColorClient] = useColor('black');
   const [widthClient, setWidthClient] = useState<number>(5);
+
+  const { roomId } = useParams();
 
   const members = useMembersStore((state) => state.members);
 
@@ -28,7 +31,7 @@ const GameRoom = () => {
         <button
           className="rounded-sm bg-gray-600 px-4 py-2"
           type="button"
-          onClick={() => socket.emit('clear')}
+          onClick={() => socket.emit('clear-canvas', { roomId })}
         >
           Clear canvas
         </button>
