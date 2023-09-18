@@ -2,18 +2,18 @@ import type { IColor } from 'react-color-palette';
 
 import type { Draw } from '@/types/typing';
 
-type DrawLineProps = Draw & {
+export type DrawOptions = Draw & {
   color: IColor;
   width: number;
 };
 
 export const drawLine = ({
-  prevPoint,
-  currentPoint,
   ctx,
+  currentPoint,
+  prevPoint,
   color,
   width,
-}: DrawLineProps) => {
+}: DrawOptions) => {
   const { x: currentX, y: currentY } = currentPoint;
   const { rgb } = color;
   const { r, g, b, a } = rgb;
