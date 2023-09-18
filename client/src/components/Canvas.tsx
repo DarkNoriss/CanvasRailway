@@ -16,6 +16,7 @@ type CanvasProps = {
 };
 
 const Canvas = ({ colorClient, widthClient }: CanvasProps) => {
+  // eslint-disable-next-line unused-imports/no-unused-vars
   const [canvasLoading, setCanvasLoading] = useState(true);
 
   const { roomId } = useParams();
