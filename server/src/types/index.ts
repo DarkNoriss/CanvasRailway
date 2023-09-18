@@ -1,8 +1,19 @@
 import type { IColor } from "react-color-palette";
 
-export type RoomData = {
+export type RoomWithCanvas = RoomId & {
+  canvasState: string;
+}
+
+export type RoomData = RoomId & {
+  username: string;
+}
+
+export type RoomDraw = RoomId & {
+  drawOptions: DrawLine;
+}
+
+export type RoomId = {
   roomId: string;
-  username: string
 }
 
 export type User = {
@@ -20,5 +31,5 @@ export type DrawLine = {
 
 export type Point = {
   x: number;
-  y: number
+  y: number;
 }
