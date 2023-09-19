@@ -2,7 +2,7 @@ import express from 'express'
 import http from 'http'
 import { Server, Socket } from 'socket.io'
 import { instrument } from '@socket.io/admin-ui'
-import type { DrawLine, RoomData, RoomDraw, RoomId, RoomWithCanvas } from './types'
+import type { RoomData, RoomDraw, RoomId, RoomWithCanvas } from './types'
 import { addUser, getRoomMembers, getUser, removeUser } from './data/users'
 
 const app = express()
@@ -21,13 +21,13 @@ const joinRoom = (socket: Socket, roomId: string, username: string) => {
     id: socket.id,
     username,
   }
-  // console.log({ ...user, roomId })
+
   addUser({ ...user, roomId })
 
   const members = getRoomMembers(roomId)
-  // console.log('members:', members)
 
   socket.emit('room-joined', { user, roomId, members })
+  socket.to(roomId).emit('update-members', members)
 }
 
 const leaveRoom = (socket: Socket) => {
@@ -39,7 +39,7 @@ const leaveRoom = (socket: Socket) => {
   removeUser(id)
   const members = getRoomMembers(roomId)
 
-  io.to(roomId).emit('update-members', members)
+  socket.to(roomId).emit('update-members', members)
   socket.leave(roomId)
 }
 
