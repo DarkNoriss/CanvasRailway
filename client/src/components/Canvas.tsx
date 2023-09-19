@@ -1,3 +1,4 @@
+import { Loader2 } from 'lucide-react';
 import { useParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import type { IColor } from 'react-color-palette';
@@ -8,6 +9,7 @@ import type { DrawOptions } from '@/lib/drawLine';
 import { drawLine } from '@/lib/drawLine';
 import { drawWithDataURL } from '@/lib/drawWithDataURL';
 import { socket } from '@/lib/socket';
+import { cn } from '@/lib/utils';
 import type { Draw } from '@/types/typing';
 
 type CanvasProps = {
@@ -16,7 +18,7 @@ type CanvasProps = {
 };
 
 const Canvas = ({ colorClient, widthClient }: CanvasProps) => {
-  const [, setCanvasLoading] = useState(true);
+  const [canvasLoading, setCanvasLoading] = useState(true);
 
   const { roomId } = useParams();
 
@@ -77,17 +79,33 @@ const Canvas = ({ colorClient, widthClient }: CanvasProps) => {
     };
   }, [canvasRef, clear, roomId]);
 
+  const handleOnMouseDown = () => {
+    if (canvasLoading) return;
+
+    onMouseDown();
+  };
+
   return (
-    <>
+    <div className="relative flex items-center justify-center">
       <Cursor size={widthClient} />
       <canvas
-        onMouseDown={onMouseDown}
+        onMouseDown={handleOnMouseDown}
         ref={canvasRef}
         width={750}
         height={750}
-        className="rounded-sm border-black bg-gray-200"
+        className={cn(
+          'rounded-sm border-black',
+          canvasLoading ? 'bg-gray-500' : 'bg-gray-200',
+        )}
       />
-    </>
+      {canvasLoading ? (
+        <div className="absolute z-20">
+          <Loader2 className="h-32 w-32 animate-spin" />
+        </div>
+      ) : (
+        ''
+      )}
+    </div>
   );
 };
 
