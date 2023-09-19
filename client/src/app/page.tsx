@@ -1,119 +1,33 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-import type { ColorResult } from 'react-color';
-import { SketchPicker } from 'react-color';
-
-import { Cursor } from '@/components/ui/Cursor';
-import { Slider } from '@/components/ui/Slider';
-import { useDraw } from '@/hooks/useDraw';
-import { drawLine } from '@/lib/drawLine';
-import { socket } from '@/lib/socket';
-
-type DrawLine = Draw & {
-  color: ColorResult['rgb'];
-  width: number;
-};
+import CreateRoomForm from '@/components/CreateRoomForm';
+import Modal from '@/components/Modal';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/Card';
+import { Separator } from '@/components/ui/Separator';
 
 const Page = () => {
-  const [colorClient, setColorClient] = useState<ColorResult['rgb']>({
-    r: 0,
-    g: 0,
-    b: 0,
-    a: 1,
-  });
-  const [widthClient, setWidthClient] = useState<number>(5);
-
-  const createLine = ({ prevPoint, currentPoint, ctx }: Draw) => {
-    socket.emit('draw-line', {
-      prevPoint,
-      currentPoint,
-      color: colorClient,
-      width: widthClient,
-    });
-    drawLine({
-      prevPoint,
-      currentPoint,
-      ctx,
-      color: colorClient,
-      width: widthClient,
-    });
-  };
-
-  const { canvasRef, onMouseDown, clear } = useDraw(createLine);
-
-  useEffect(() => {
-    const ctx = canvasRef.current?.getContext('2d');
-
-    socket.emit('client-ready');
-
-    socket.on('get-canvas-state', () => {
-      if (!canvasRef.current?.toDataURL()) return;
-
-      socket.emit('canvas-state', canvasRef.current.toDataURL());
-    });
-
-    socket.on('canvas-state-from-server', (state: string) => {
-      const img = new Image();
-      img.src = state;
-      img.onload = () => {
-        ctx?.drawImage(img, 0, 0);
-      };
-    });
-
-    socket.on(
-      'draw-line',
-      ({ prevPoint, currentPoint, color, width }: DrawLine) => {
-        if (!ctx) return;
-        drawLine({
-          prevPoint,
-          currentPoint,
-          ctx,
-          color,
-          width,
-        });
-      },
-    );
-
-    socket.on('clear', clear);
-
-    return () => {
-      socket.off('get-canvas-state');
-      socket.off('canvas-state-from-server');
-      socket.off('draw-line');
-      socket.off('clear');
-    };
-  }, [canvasRef, clear]);
-
   return (
-    <div className="flex flex-row gap-4">
-      <Cursor size={widthClient} />
-      <div className="flex flex-col items-center justify-center gap-8">
-        <SketchPicker
-          color={colorClient}
-          onChange={(newColor: ColorResult) => setColorClient(newColor.rgb)}
-        />
-        <Slider
-          defaultValue={[widthClient]}
-          onValueChange={(value) => setWidthClient(value[0] ?? 5)}
-          min={1}
-        />
-        <button
-          className="rounded-sm bg-gray-800 px-4 py-2"
-          type="button"
-          onClick={() => socket.emit('clear')}
-        >
-          Clear canvas
-        </button>
-      </div>
-      <canvas
-        onMouseDown={onMouseDown}
-        ref={canvasRef}
-        width={750}
-        height={750}
-        className="rounded-sm border-black bg-gray-200"
-      />
-    </div>
+    <Card className="w-[90vw] max-w-sm">
+      <CardHeader>
+        <CardTitle>Meowvas</CardTitle>
+        <CardDescription>Draw with ur frens! Yipeeeeeeeeeeeee!</CardDescription>
+      </CardHeader>
+      <CardContent className="flex flex-col space-y-4">
+        <CreateRoomForm />
+        <div className="  flex items-center space-x-2">
+          <Separator decorative />
+          <span className="text-xs text-muted-foreground">OR</span>
+          <Separator decorative />
+        </div>
+        <Modal />
+      </CardContent>
+    </Card>
   );
 };
 

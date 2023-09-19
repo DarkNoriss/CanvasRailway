@@ -1,19 +1,23 @@
-import type { ColorResult } from 'react-color';
+import type { IColor } from 'react-color-palette';
 
-type DrawLineProps = Draw & {
-  color: ColorResult['rgb'];
+import type { Draw } from '@/types/typing';
+
+export type DrawOptions = Draw & {
+  color: IColor;
   width: number;
 };
 
 export const drawLine = ({
-  prevPoint,
-  currentPoint,
   ctx,
+  currentPoint,
+  prevPoint,
   color,
   width,
-}: DrawLineProps) => {
+}: DrawOptions) => {
   const { x: currentX, y: currentY } = currentPoint;
-  const { r, g, b, a } = color;
+  const { rgb } = color;
+  const { r, g, b, a } = rgb;
+
   const lineColor = `rgba(${r}, ${g}, ${b}, ${a})`;
   const lineWidth = width;
 

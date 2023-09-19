@@ -11,5 +11,8 @@
   "license": "ISC",
   "devDependencies": {
     "concurrently": "^8.2.1"
+  },
+  "dependencies": {
+    "nanoid": "^4.0.2"
   }
 }
