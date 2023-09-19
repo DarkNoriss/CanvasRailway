@@ -5,15 +5,14 @@ import { ColorPicker, useColor } from 'react-color-palette';
 import Canvas from '@/components/Canvas';
 import { Slider } from '@/components/ui/Slider';
 import { socket } from '@/lib/socket';
-import { useMembersStore } from '@/store/membersStore';
+
+import MemberList from './MemberList';
 
 const GameRoom = () => {
   const [colorClient, setColorClient] = useColor('black');
   const [widthClient, setWidthClient] = useState<number>(5);
 
   const { roomId } = useParams();
-
-  const members = useMembersStore((state) => state.members);
 
   return (
     <div className="flex w-full flex-row justify-center gap-4">
@@ -22,6 +21,7 @@ const GameRoom = () => {
           color={colorClient}
           onChange={setColorClient}
           hideInput={['hsv']}
+          hideAlpha
         />
         <Slider
           defaultValue={[widthClient]}
@@ -35,11 +35,7 @@ const GameRoom = () => {
         >
           Clear canvas
         </button>
-        <div className="flex flex-col">
-          {members.map(({ id, username }) => (
-            <span key={id}>{username}</span>
-          ))}
-        </div>
+        <MemberList />
       </div>
       <Canvas colorClient={colorClient} widthClient={widthClient} />
     </div>
