@@ -2,11 +2,10 @@ import { useParams } from 'next/navigation';
 import { useState } from 'react';
 import { ColorPicker, useColor } from 'react-color-palette';
 
-import Canvas from '@/components/Canvas';
+import CanvasOld from '@/components/CanvasOld';
+import MemberList from '@/components/MemberList';
 import { Slider } from '@/components/ui/Slider';
 import { socket } from '@/lib/socket';
-
-import MemberList from './MemberList';
 
 const GameRoom = () => {
   const [colorClient, setColorClient] = useColor('black');
@@ -37,7 +36,7 @@ const GameRoom = () => {
         </button>
         <MemberList />
       </div>
-      <Canvas colorClient={colorClient} widthClient={widthClient} />
+      <CanvasOld colorClient={colorClient} widthClient={widthClient} />
     </div>
   );
 };

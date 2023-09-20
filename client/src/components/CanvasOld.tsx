@@ -17,7 +17,7 @@ type CanvasProps = {
   widthClient: number;
 };
 
-const Canvas = ({ colorClient, widthClient }: CanvasProps) => {
+const CanvasOld = ({ colorClient, widthClient }: CanvasProps) => {
   const [canvasLoading, setCanvasLoading] = useState(true);
 
   const { roomId } = useParams();
@@ -109,4 +109,4 @@ const Canvas = ({ colorClient, widthClient }: CanvasProps) => {
   );
 };
 
-export default Canvas;
+export default CanvasOld;
