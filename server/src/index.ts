@@ -21,11 +21,10 @@ const joinRoom = (socket: Socket, roomId: string, username: string) => {
     id: socket.id,
     username,
   }
-  // console.log({ ...user, roomId })
+
   addUser({ ...user, roomId })
 
   const members = getRoomMembers(roomId)
-  // console.log('members:', members)
 
   socket.emit('room-joined', { user, roomId, members })
 }
@@ -82,6 +81,7 @@ io.on('connection', socket => {
   })
 
   socket.on('clear-canvas', ({ roomId }: RoomId) => {
+    socket.emit('clear-canvas')
     socket.to(roomId).emit('clear-canvas')
   })
 
