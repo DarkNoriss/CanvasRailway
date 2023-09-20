@@ -31,6 +31,7 @@
     "react-color-palette": "^7.1.0",
     "react-dom": "^18.2.0",
     "react-hook-form": "^7.46.1",
+    "react-sketch-canvas": "^6.2.0",
     "socket.io-client": "^4.7.2",
     "tailwind-merge": "^1.14.0",
     "tailwindcss-animate": "^1.0.7",
