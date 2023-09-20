@@ -4,7 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "concurrently \"cd server && pnpm dev\" \"cd client && pnpm dev\""
+    "dev": "concurrently \"cd server && pnpm dev\" \"cd client && pnpm dev\"",
+    "inst": "concurrently \"cd server && pnpm install\" \"cd client && pnpm install\"",
+    "upd": "concurrently \"cd server && pnpm update\" \"cd client && pnpm update\""
   },
   "keywords": [],
   "author": "DarkNoriss",
