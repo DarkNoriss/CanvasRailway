@@ -16,9 +16,8 @@ export const drawLine = ({
 }: DrawOptions) => {
   const { x: currentX, y: currentY } = currentPoint;
   const { rgb } = color;
-  const { r, g, b, a } = rgb;
 
-  const lineColor = `rgba(${r}, ${g}, ${b}, ${a})`;
+  const lineColor = `rgba(${{ ...rgb }})`;
   const lineWidth = width;
 
   const startPoint = prevPoint ?? currentPoint;
