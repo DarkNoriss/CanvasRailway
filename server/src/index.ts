@@ -82,17 +82,14 @@ io.on('connection', socket => {
   })
 
   socket.on('canvas-undo', ({ roomId }: RoomId) => {
-    console.log('canvas-undo')
     socket.to(roomId).emit('canvas-undo')
   })
 
   socket.on('canvas-redo', ({ roomId }: RoomId) => {
-    console.log('canvas-redo')
     socket.to(roomId).emit('canvas-redo')
   })
 
   socket.on('canvas-clear', ({ roomId }: RoomId) => {
-    console.log('canvas-clear')
     socket.to(roomId).emit('canvas-clear')
   })
 
