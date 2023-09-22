@@ -3,8 +3,8 @@ import { useEffect, useRef, useState } from 'react';
 import { ColorPicker, useColor } from 'react-color-palette';
 import type { ReactSketchCanvasRef } from 'react-sketch-canvas';
 
+import Canvas from '@/components/Canvas';
 import CanvasButtons from '@/components/CanvasButtons';
-import CanvasNew from '@/components/CanvasNew';
 import { Slider } from '@/components/ui/Slider';
 import { socket } from '@/lib/socket';
 
@@ -57,7 +57,7 @@ const GameRoom = () => {
         <CanvasButtons canvas={canvas} />
       </div>
 
-      <CanvasNew
+      <Canvas
         canvas={canvas}
         strokeWidth={strokeWidth}
         strokeColor={strokeColor.hex}

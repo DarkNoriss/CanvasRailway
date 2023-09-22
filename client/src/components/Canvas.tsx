@@ -11,7 +11,7 @@ type CanvasProps = {
   strokeWidth: number;
   strokeColor: string;
 };
-const CanvasNew = ({ canvas, strokeWidth, strokeColor }: CanvasProps) => {
+const Canvas = ({ canvas, strokeWidth, strokeColor }: CanvasProps) => {
   const { roomId } = useParams();
 
   useEffect(() => {
@@ -41,4 +41,4 @@ const CanvasNew = ({ canvas, strokeWidth, strokeColor }: CanvasProps) => {
   );
 };
 
-export default CanvasNew;
+export default Canvas;
