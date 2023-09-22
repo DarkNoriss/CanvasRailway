@@ -2,7 +2,7 @@ import express from 'express'
 import http from 'http'
 import { Server, Socket } from 'socket.io'
 import { instrument } from '@socket.io/admin-ui'
-import type { RoomData, RoomDraw, RoomId, RoomWithCanvas } from './types'
+import type { RoomCanvas, RoomData, RoomDraw, RoomId} from './types'
 import { addUser, getRoomMembers, getUser, removeUser } from './data/users'
 
 const app = express()
@@ -27,7 +27,7 @@ const joinRoom = (socket: Socket, roomId: string, username: string) => {
   const members = getRoomMembers(roomId)
 
   socket.emit('room-joined', { user, roomId, members })
-  socket.to(roomId).emit('update-members', members)
+  socket.to(roomId).emit('update-members', { members })
 }
 
 const leaveRoom = (socket: Socket) => {
@@ -39,7 +39,7 @@ const leaveRoom = (socket: Socket) => {
   removeUser(id)
   const members = getRoomMembers(roomId)
 
-  socket.to(roomId).emit('update-members', members)
+  socket.to(roomId).emit('update-members', { members })
   socket.leave(roomId)
 }
 
@@ -65,24 +65,35 @@ io.on('connection', socket => {
 
     if (!adminMember) return
 
-    socket.to(adminMember.id).emit('get-canvas-state')
+    socket.to(adminMember.id).emit('get-canvas-paths')
   })
 
-  socket.on('send-canvas-state', ({ canvasState, roomId }: RoomWithCanvas) => {
+  socket.on('send-canvas-paths', ({ canvasPaths, roomId }: RoomCanvas) => {
     const members = getRoomMembers(roomId)
     const lastMember = members[members.length - 1]
 
     if (!lastMember) return
 
-    socket.to(lastMember.id).emit('canvas-state-from-server', canvasState)
+    socket.to(lastMember.id).emit('canvas-paths-from-server', { canvasPaths })
   })
 
-  socket.on('draw', ({ drawOptions, roomId }: RoomDraw) => {
-    socket.to(roomId).emit('update-canvas-state', drawOptions)
+  socket.on('canvas-draw', ({ canvasPaths, roomId }: RoomDraw) => {
+    socket.to(roomId).emit('canvas-draw', { canvasPaths })
   })
 
-  socket.on('clear-canvas', ({ roomId }: RoomId) => {
-    socket.to(roomId).emit('clear-canvas')
+  socket.on('canvas-undo', ({ roomId }: RoomId) => {
+    console.log('canvas-undo')
+    socket.to(roomId).emit('canvas-undo')
+  })
+
+  socket.on('canvas-redo', ({ roomId }: RoomId) => {
+    console.log('canvas-redo')
+    socket.to(roomId).emit('canvas-redo')
+  })
+
+  socket.on('canvas-clear', ({ roomId }: RoomId) => {
+    console.log('canvas-clear')
+    socket.to(roomId).emit('canvas-clear')
   })
 
   socket.on('disconnect', () => {
