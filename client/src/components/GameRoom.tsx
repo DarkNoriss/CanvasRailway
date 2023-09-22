@@ -11,7 +11,7 @@ import { socket } from '@/lib/socket';
 const GameRoom = () => {
   const [strokeColor, setStrokeColor] = useColor('black');
   const [strokeWidth, setStrokeWidth] = useState(5);
-  const [canvasLoading, setCanvasLoading] = useState(true);
+  const [, setCanvasLoading] = useState(true);
 
   const canvas = useRef<ReactSketchCanvasRef | null>(null);
 
@@ -25,7 +25,6 @@ const GameRoom = () => {
       const canvasPaths = await canvas.current?.exportPaths();
       if (!canvasPaths) return;
 
-      console.log(canvasPaths);
       socket.emit('send-canvas-paths', { canvasPaths, roomId });
     });
     socket.on('canvas-paths-from-server', ({ canvasPaths }) => {
