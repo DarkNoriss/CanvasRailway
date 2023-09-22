@@ -22,6 +22,7 @@ const joinRoom = (socket: Socket, roomId: string, username: string) => {
     username,
   }
 
+
   addUser({ ...user, roomId })
 
   const members = getRoomMembers(roomId)
