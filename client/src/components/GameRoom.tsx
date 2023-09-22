@@ -21,22 +21,9 @@ const GameRoom = () => {
     socket.emit('client-ready', { roomId });
 
     socket.on('client-loaded', () => setCanvasLoading(false));
-    socket.on('get-canvas-paths', async () => {
-      const canvasPaths = await canvas.current?.exportPaths();
-      if (!canvasPaths) return;
-
-      socket.emit('send-canvas-paths', { canvasPaths, roomId });
-    });
-    socket.on('canvas-paths-from-server', ({ canvasPaths }) => {
-      if (!canvas.current) return;
-
-      canvas.current.loadPaths(canvasPaths);
-    });
 
     return () => {
       socket.off('client-loaded');
-      socket.off('get-canvas-paths');
-      socket.off('canvas-paths-from-server');
     };
   }, [roomId]);
 
