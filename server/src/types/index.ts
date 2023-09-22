@@ -1,7 +1,5 @@
-import type { IColor } from "react-color-palette";
-
-export type RoomWithCanvas = RoomId & {
-  canvasState: string;
+export type RoomCanvas = RoomId & {
+  canvasPaths: CanvasPath;
 }
 
 export type RoomData = RoomId & {
@@ -9,7 +7,7 @@ export type RoomData = RoomId & {
 }
 
 export type RoomDraw = RoomId & {
-  drawOptions: DrawLine;
+  canvasPaths: CanvasPath;
 }
 
 export type RoomId = {
@@ -22,14 +20,16 @@ export type User = {
   roomId: string;
 }
 
-export type DrawLine = {
-  prevPoint: Point | null
-  currentPoint: Point
-  color: IColor;
-  width: number
-}
-
 export type Point = {
   x: number;
   y: number;
+}
+
+type CanvasPath = {
+  paths: Point[];
+  strokeWidth: number;
+  strokeColor: string;
+  drawMode: boolean;
+  startTimestamp?: number;
+  endTimestamp?: number;
 }
