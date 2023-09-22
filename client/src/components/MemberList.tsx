@@ -9,7 +9,7 @@ const MemberList = () => {
   const setMembers = useMembersStore((state) => state.setMembers);
 
   useEffect(() => {
-    socket.on('update-members', (members) => setMembers(members));
+    socket.on('update-members', ({ members }) => setMembers(members));
 
     return () => {
       socket.off('update-members');
