@@ -1,47 +1,54 @@
 import { useParams } from 'next/navigation';
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { ColorPicker, useColor } from 'react-color-palette';
+import type { ReactSketchCanvasRef } from 'react-sketch-canvas';
 
 import Canvas from '@/components/Canvas';
+import CanvasButtons from '@/components/CanvasButtons';
 import { Slider } from '@/components/ui/Slider';
 import { socket } from '@/lib/socket';
-import { useMembersStore } from '@/store/membersStore';
 
 const GameRoom = () => {
-  const [colorClient, setColorClient] = useColor('black');
-  const [widthClient, setWidthClient] = useState<number>(5);
+  const [strokeColor, setStrokeColor] = useColor('black');
+  const [strokeWidth, setStrokeWidth] = useState(5);
+  const [, setCanvasLoading] = useState(true);
+
+  const canvas = useRef<ReactSketchCanvasRef | null>(null);
 
   const { roomId } = useParams();
 
-  const members = useMembersStore((state) => state.members);
+  useEffect(() => {
+    socket.emit('client-ready', { roomId });
+
+    socket.on('client-loaded', () => setCanvasLoading(false));
+
+    return () => {
+      socket.off('client-loaded');
+    };
+  }, [roomId]);
 
   return (
-    <div className="flex w-full flex-row justify-center gap-4">
-      <div className="flex flex-col gap-8">
+    <div className="flex h-screen max-h-[80vh] w-full flex-row justify-center gap-2">
+      <div className="rounded-xl bg-[#121212]">
         <ColorPicker
-          color={colorClient}
-          onChange={setColorClient}
+          color={strokeColor}
+          onChange={setStrokeColor}
           hideInput={['hsv']}
         />
         <Slider
-          defaultValue={[widthClient]}
-          onValueChange={(value) => setWidthClient(value[0] ?? 5)}
+          defaultValue={[5]}
+          onValueChange={(value) => setStrokeWidth(value[0] ?? 5)}
           min={1}
+          className="mx-auto mb-4 w-[80%]"
         />
-        <button
-          className="rounded-sm bg-gray-600 px-4 py-2"
-          type="button"
-          onClick={() => socket.emit('clear-canvas', { roomId })}
-        >
-          Clear canvas
-        </button>
-        <div className="flex flex-col">
-          {members.map(({ id, username }) => (
-            <span key={id}>{username}</span>
-          ))}
-        </div>
+        <CanvasButtons canvas={canvas} />
       </div>
-      <Canvas colorClient={colorClient} widthClient={widthClient} />
+
+      <Canvas
+        canvas={canvas}
+        strokeWidth={strokeWidth}
+        strokeColor={strokeColor.hex}
+      />
     </div>
   );
 };

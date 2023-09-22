@@ -1,93 +1,56 @@
 import { useParams } from 'next/navigation';
-import { useEffect, useState } from 'react';
-import type { IColor } from 'react-color-palette';
+import type { MutableRefObject } from 'react';
+import { useEffect } from 'react';
+import type { CanvasPath, ReactSketchCanvasRef } from 'react-sketch-canvas';
+import { ReactSketchCanvas } from 'react-sketch-canvas';
 
-import { Cursor } from '@/components/ui/Cursor';
-import { useDraw } from '@/hooks/useDraw';
-import type { DrawOptions } from '@/lib/drawLine';
-import { drawLine } from '@/lib/drawLine';
-import { drawWithDataURL } from '@/lib/drawWithDataURL';
 import { socket } from '@/lib/socket';
-import type { Draw } from '@/types/typing';
 
 type CanvasProps = {
-  colorClient: IColor;
-  widthClient: number;
+  canvas: MutableRefObject<ReactSketchCanvasRef | null>;
+  strokeWidth: number;
+  strokeColor: string;
 };
-
-const Canvas = ({ colorClient, widthClient }: CanvasProps) => {
-  const [, setCanvasLoading] = useState(true);
-
+const Canvas = ({ canvas, strokeWidth, strokeColor }: CanvasProps) => {
   const { roomId } = useParams();
 
-  const createLine = ({ prevPoint, currentPoint, ctx }: Draw) => {
-    const drawOptions = {
-      ctx,
-      currentPoint,
-      prevPoint,
-      color: colorClient,
-      width: widthClient,
-    };
-
-    drawLine(drawOptions);
-
-    socket.emit('draw', { drawOptions, roomId });
-  };
-
-  const { canvasRef, onMouseDown, clear } = useDraw(createLine);
-
   useEffect(() => {
-    const canvasElement = canvasRef.current;
-    const ctx = canvasRef.current?.getContext('2d');
+    socket.on('get-canvas-paths', async () => {
+      const canvasPaths = await canvas.current?.exportPaths();
+      if (!canvasPaths) return;
 
-    socket.emit('client-ready', { roomId }); // works
-
-    socket.on('client-loaded', () => {
-      setCanvasLoading(false);
+      socket.emit('send-canvas-paths', { canvasPaths, roomId });
     });
 
-    socket.on('get-canvas-state', () => {
-      const canvasState = canvasRef.current?.toDataURL();
-      if (!canvasState) return;
-
-      socket.emit('send-canvas-state', { canvasState, roomId });
+    socket.on('canvas-paths-from-server', ({ canvasPaths }) => {
+      canvas.current?.loadPaths(canvasPaths);
     });
 
-    socket.on('canvas-state-from-server', (canvasState: string) => {
-      if (!ctx || !canvasElement) return;
-
-      drawWithDataURL(canvasState, ctx, canvasElement);
-      setCanvasLoading(false);
+    socket.on('canvas-draw', ({ canvasPaths }) => {
+      canvas.current?.loadPaths(canvasPaths);
     });
-
-    socket.on('update-canvas-state', (drawOptions: DrawOptions) => {
-      if (!ctx) return;
-
-      drawLine({ ...drawOptions, ctx });
-    });
-
-    socket.on('clear-canvas', clear);
 
     return () => {
-      socket.off('hello');
-      socket.off('get-canvas-state');
-      socket.off('canvas-state-from-server');
-      socket.off('update-canvas-state');
-      socket.off('clear-canvas');
+      socket.off('get-canvas-paths');
+      socket.off('canvas-paths-from-server');
+      socket.off('canvas-draw');
     };
-  }, [canvasRef, clear, roomId]);
+  }, [canvas, roomId]);
+
+  const handleOnStroke = (canvasPaths: CanvasPath) => {
+    if (canvasPaths.paths.length === 1) return;
+
+    socket.emit('canvas-draw', { canvasPaths, roomId });
+  };
 
   return (
-    <>
-      <Cursor size={widthClient} />
-      <canvas
-        onMouseDown={onMouseDown}
-        ref={canvasRef}
-        width={750}
-        height={750}
-        className="rounded-sm border-black bg-gray-200"
-      />
-    </>
+    <ReactSketchCanvas
+      ref={canvas}
+      strokeWidth={strokeWidth}
+      strokeColor={strokeColor}
+      onStroke={handleOnStroke}
+      className="rounded"
+    />
   );
 };
 
