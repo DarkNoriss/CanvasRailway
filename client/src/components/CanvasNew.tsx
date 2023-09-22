@@ -16,7 +16,7 @@ const CanvasNew = ({ canvas, strokeWidth, strokeColor }: CanvasProps) => {
 
   useEffect(() => {
     socket.on('canvas-draw', ({ canvasPaths }) => {
-      // canvas.current?.loadPaths(canvasPaths);
+      canvas.current?.loadPaths(canvasPaths);
     });
 
     return () => {
@@ -24,9 +24,10 @@ const CanvasNew = ({ canvas, strokeWidth, strokeColor }: CanvasProps) => {
     };
   }, [canvas]);
 
-  const handleOnChange = (canvasPaths: CanvasPath[]) => {
-    console.log(canvasPaths);
-    // socket.emit('canvas-draw', { canvasPaths, roomId });
+  const handleOnStroke = (canvasPaths: CanvasPath) => {
+    if (canvasPaths.paths.length === 1) return;
+
+    socket.emit('canvas-draw', { canvasPaths, roomId });
   };
 
   return (
@@ -34,7 +35,7 @@ const CanvasNew = ({ canvas, strokeWidth, strokeColor }: CanvasProps) => {
       ref={canvas}
       strokeWidth={strokeWidth}
       strokeColor={strokeColor}
-      onChange={handleOnChange}
+      onStroke={handleOnStroke}
       className="rounded"
     />
   );
