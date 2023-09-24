@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 
 import GameLobby from '@/components/GameLobby';
+import GamePicking from '@/components/GamePicking';
 import GameRoom from '@/components/GameRoom';
 import { socket } from '@/lib/socket';
 import { useGameStateStore } from '@/store/gameStatusStore';
@@ -15,6 +16,7 @@ import { useUserStore } from '@/store/userStore';
 type GameStateProps = typeof gameState;
 const gameState = {
   GAME_LOBBY: <GameLobby />,
+  GAME_PICKING: <GamePicking />,
   GAME_ROOM: <GameRoom />,
 };
 

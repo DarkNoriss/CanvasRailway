@@ -13,7 +13,7 @@ const Countdown = () => {
     if (seconds > 0) interval.start();
     if (seconds <= 0) {
       interval.stop();
-      setGameState('GAME_ROOM');
+      setGameState('GAME_PICKING');
     }
 
     return interval.stop;
