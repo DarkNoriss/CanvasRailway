@@ -3,6 +3,8 @@ import { create } from 'zustand';
 export type User = {
   id: string;
   username: string;
+  isAdmin: boolean;
+  isDrawing: boolean;
 };
 
 type UserStoreType = {
