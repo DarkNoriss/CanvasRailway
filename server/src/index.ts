@@ -20,6 +20,8 @@ const joinRoom = (socket: Socket, roomId: string, username: string) => {
   const user = {
     id: socket.id,
     username,
+    isAdmin: false,
+    isDrawing: false
   }
 
 
@@ -92,6 +94,10 @@ io.on('connection', socket => {
 
   socket.on('canvas-clear', ({ roomId }: RoomId) => {
     socket.to(roomId).emit('canvas-clear')
+  })
+
+  socket.on('start', ({ roomId }: RoomId) => {
+    socket.to(roomId).emit('start')
   })
 
   socket.on('disconnect', () => {

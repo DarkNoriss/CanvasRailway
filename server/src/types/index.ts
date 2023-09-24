@@ -18,6 +18,8 @@ export type User = {
   id: string;
   username: string;
   roomId: string;
+  isAdmin: boolean;
+  isDrawing: boolean;
 }
 
 export type Point = {
