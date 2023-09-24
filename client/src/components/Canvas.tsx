@@ -11,6 +11,7 @@ type CanvasProps = {
   strokeWidth: number;
   strokeColor: string;
 };
+
 const Canvas = ({ canvas, strokeWidth, strokeColor }: CanvasProps) => {
   const { roomId } = useParams();
 
