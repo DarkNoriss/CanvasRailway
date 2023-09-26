@@ -1,18 +1,18 @@
 export type RoomCanvas = RoomId & {
   canvasPaths: CanvasPath;
-}
+};
 
 export type RoomData = RoomId & {
   username: string;
-}
+};
 
 export type RoomDraw = RoomId & {
   canvasPaths: CanvasPath;
-}
+};
 
 export type RoomId = {
   roomId: string;
-}
+};
 
 export type User = {
   id: string;
@@ -20,12 +20,12 @@ export type User = {
   roomId: string;
   isAdmin: boolean;
   isDrawing: boolean;
-}
+};
 
 export type Point = {
   x: number;
   y: number;
-}
+};
 
 type CanvasPath = {
   paths: Point[];
@@ -34,4 +34,4 @@ type CanvasPath = {
   drawMode: boolean;
   startTimestamp?: number;
   endTimestamp?: number;
-}
+};
