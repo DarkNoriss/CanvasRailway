@@ -1,5 +1,4 @@
-import { Button } from '@/components/ui/Button';
-import { socket } from '@/lib/socket';
+import TypeWord from '@/components/TypeWord';
 import { useUserStore } from '@/store/userStore';
 
 const GamePicking = () => {
@@ -8,12 +7,11 @@ const GamePicking = () => {
   return (
     <div className="flex justify-center">
       {user?.isDrawing ? (
-        <div>
-          <span>Enter a word!</span>
-          <Button onClick={() => socket.emit('check')}>CHECK ARRAY</Button>
+        <div className="flex flex-col justify-center">
+          <TypeWord />
         </div>
       ) : (
-        <span>Host is picking a word...</span>
+        <span>Player is entering a word...</span>
       )}
     </div>
   );
