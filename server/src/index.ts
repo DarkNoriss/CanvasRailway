@@ -3,10 +3,10 @@ import express from 'express';
 import http from 'http';
 import { Server } from 'socket.io';
 
-import { getRoomMembers } from '@/data/users';
-import type { RoomCanvas, RoomData, RoomDraw, RoomId } from '@/types';
-import { joinRoom } from '@/utils/joinRoom';
-import { leaveRoom } from '@/utils/leaveRoom';
+import { getRoomMembers, setUserDrawing } from './data/users';
+import type { RoomCanvas, RoomData, RoomDraw, RoomId } from './types';
+import { joinRoom } from './utils/joinRoom';
+import { leaveRoom } from './utils/leaveRoom';
 
 const app = express();
 const server = http.createServer(app);
@@ -19,7 +19,15 @@ const io = new Server(server, {
 
 io.on('connection', (socket) => {
   socket.on('create-room', ({ roomId, username }: RoomData) => {
-    joinRoom(socket, roomId, username);
+    const user = {
+      id: socket.id,
+      username,
+      roomId,
+      isAdmin: true,
+      isDrawing: false,
+    };
+
+    joinRoom(socket, roomId, user);
   });
 
   socket.on('join-room', ({ roomId, username }: RoomData) => {
@@ -29,7 +37,15 @@ io.on('connection', (socket) => {
       socket.emit('join-room-failed');
       return;
     }
-    joinRoom(socket, roomId, username);
+    const user = {
+      id: socket.id,
+      username,
+      roomId,
+      isAdmin: false,
+      isDrawing: false,
+    };
+
+    joinRoom(socket, roomId, user);
   });
 
   socket.on('client-ready', ({ roomId }: RoomId) => {
@@ -73,7 +89,15 @@ io.on('connection', (socket) => {
   });
 
   socket.on('start', ({ roomId }: RoomId) => {
+    socket.emit('start');
     socket.to(roomId).emit('start');
+
+    setUserDrawing(roomId);
+
+    const members = getRoomMembers(roomId);
+
+    socket.emit('update-members', { members });
+    socket.to(roomId).emit('update-members', { members });
   });
 
   socket.on('disconnect', () => {
