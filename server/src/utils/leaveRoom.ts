@@ -1,6 +1,6 @@
 import type { Socket } from 'socket.io';
 
-import { getRoomMembers, getUser, removeUser } from '@/data/users';
+import { getRoomMembers, getUser, removeUser } from '../data/users';
 
 export const leaveRoom = (socket: Socket) => {
   const user = getUser(socket.id);

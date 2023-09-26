@@ -1,20 +1,16 @@
-import { addUser, getRoomMembers } from '@/data/users'
-import { Socket } from 'socket.io'
+import type { Socket } from 'socket.io';
 
-export const joinRoom = (socket: Socket, roomId: string, username: string) => {
-  socket.join(roomId)
+import type { User } from '@/types';
 
-  const user = {
-    id: socket.id,
-    username,
-    isAdmin: false,
-    isDrawing: false,
-  }
+import { addUser, getRoomMembers } from '../data/users';
 
-  addUser({ ...user, roomId })
+export const joinRoom = (socket: Socket, roomId: string, user: User) => {
+  socket.join(roomId);
 
-  const members = getRoomMembers(roomId)
+  addUser({ ...user });
 
-  socket.emit('room-joined', { user, roomId, members })
-  socket.to(roomId).emit('update-members', { members })
-}
+  const members = getRoomMembers(roomId);
+
+  socket.emit('room-joined', { user, roomId, members });
+  socket.to(roomId).emit('update-members', { members });
+};
