@@ -22,7 +22,7 @@ const GameLobby = () => {
   }, []);
 
   const handleOnClick = () => {
-    socket.emit('start', { roomId });
+    socket.emit('start-lobby', { roomId });
   };
 
   return (
