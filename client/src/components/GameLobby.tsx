@@ -14,10 +14,10 @@ const GameLobby = () => {
   const { roomId } = useParams();
 
   useEffect(() => {
-    socket.on('start', () => setStarting(true));
+    socket.on('start-lobby', () => setStarting(true));
 
     return () => {
-      socket.off('start');
+      socket.off('start-lobby');
     };
   }, []);
 
