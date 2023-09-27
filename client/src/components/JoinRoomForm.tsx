@@ -16,14 +16,14 @@ import { Input } from '@/components/ui/Input';
 import { useToast } from '@/hooks/useToast';
 import { socket } from '@/lib/socket';
 import { joinRoomSchema } from '@/lib/validations/roomForm';
-import type { RoomType } from '@/types/form';
+import type { JoinRoomType } from '@/types/form';
 
 const JoinRoomForm = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const { toast } = useToast();
 
-  const form = useForm<RoomType>({
+  const form = useForm<JoinRoomType>({
     resolver: zodResolver(joinRoomSchema),
     defaultValues: {
       username: '',
@@ -47,7 +47,7 @@ const JoinRoomForm = () => {
     };
   }, [toast]);
 
-  const onSubmit = (values: RoomType) => {
+  const onSubmit = (values: JoinRoomType) => {
     socket.emit('join-room', values);
     setIsLoading(true);
   };

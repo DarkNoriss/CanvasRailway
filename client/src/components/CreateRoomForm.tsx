@@ -20,7 +20,7 @@ import { socket } from '@/lib/socket';
 import { createRoomSchema } from '@/lib/validations/roomForm';
 import { useMembersStore } from '@/store/membersStore';
 import { useUserStore } from '@/store/userStore';
-import type { RoomType } from '@/types/form';
+import type { CreateRoomType } from '@/types/form';
 
 const CreateRoomForm = () => {
   const router = useRouter();
@@ -31,7 +31,7 @@ const CreateRoomForm = () => {
   const [genRoomId, setGenRoomId] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  const form = useForm<RoomType>({
+  const form = useForm<CreateRoomType>({
     resolver: zodResolver(createRoomSchema),
     defaultValues: {
       username: '',
@@ -52,7 +52,7 @@ const CreateRoomForm = () => {
     };
   }, [genRoomId, router, setMembers, setUser]);
 
-  const onSubmit = (values: RoomType) => {
+  const onSubmit = (values: CreateRoomType) => {
     const roomId = genRoomId;
     const { username } = values;
 
