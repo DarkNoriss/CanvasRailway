@@ -1,6 +1,7 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Loader2 } from 'lucide-react';
-import { useState } from 'react';
+import { useParams } from 'next/navigation';
+import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 
 import { Button } from '@/components/ui/Button';
@@ -13,11 +14,26 @@ import {
   FormMessage,
 } from '@/components/ui/Form';
 import { Input } from '@/components/ui/Input';
+import { socket } from '@/lib/socket';
 import { roomWordSchema } from '@/lib/validations/roomWord';
+import { useRoomWordStore } from '@/store/roomWordStore';
 import type { RoomWordType } from '@/types/form';
 
 const TypeWord = () => {
+  const { roomId } = useParams();
+
+  const setRoomWord = useRoomWordStore((state) => state.setRoomWord);
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  useEffect(() => {
+    socket.on('start-game', ({ roomWord }) => {
+      setRoomWord(roomWord);
+    });
+
+    return () => {
+      socket.off('start-game');
+    };
+  }, [setRoomWord]);
 
   const form = useForm<RoomWordType>({
     resolver: zodResolver(roomWordSchema),
@@ -26,8 +42,9 @@ const TypeWord = () => {
     },
   });
 
-  const onSubmit = (values: RoomWordType) => {
-    console.log(values);
+  const onSubmit = ({ roomWord }: RoomWordType) => {
+    setIsSubmitting(true);
+    socket.emit('submit-word', { roomId, roomWord });
   };
 
   return (
