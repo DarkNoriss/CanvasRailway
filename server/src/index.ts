@@ -4,7 +4,8 @@ import http from 'http';
 import { Server } from 'socket.io';
 
 import { getRoomMembers, setUserDrawing } from './data/users';
-import type { RoomCanvas, RoomData, RoomDraw, RoomId } from './types';
+import { addWord } from './data/words';
+import type { RoomCanvas, RoomData, RoomDraw, RoomId, WordType } from './types';
 import { joinRoom } from './utils/joinRoom';
 import { leaveRoom } from './utils/leaveRoom';
 
@@ -88,9 +89,9 @@ io.on('connection', (socket) => {
     socket.to(roomId).emit('canvas-clear');
   });
 
-  socket.on('start', ({ roomId }: RoomId) => {
-    socket.emit('start');
-    socket.to(roomId).emit('start');
+  socket.on('start-lobby', ({ roomId }: RoomId) => {
+    socket.emit('start-lobby');
+    socket.to(roomId).emit('start-lobby');
 
     setUserDrawing(roomId);
 
@@ -98,6 +99,18 @@ io.on('connection', (socket) => {
 
     socket.emit('update-members', { members });
     socket.to(roomId).emit('update-members', { members });
+  });
+
+  socket.on('submit-word', ({ roomId, roomWord }: WordType) => {
+    const newWord = {
+      roomId,
+      roomWord,
+    };
+
+    addWord(newWord);
+
+    socket.emit('start-game', { roomWord });
+    socket.to(roomId).emit('start-game', { roomWord });
   });
 
   socket.on('disconnect', () => {

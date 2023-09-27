@@ -35,3 +35,7 @@ type CanvasPath = {
   startTimestamp?: number;
   endTimestamp?: number;
 };
+
+export type WordType = RoomId & {
+  roomWord: string;
+};
