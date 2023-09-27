@@ -7,16 +7,19 @@ import Canvas from '@/components/Canvas';
 import CanvasButtons from '@/components/CanvasButtons';
 import { Slider } from '@/components/ui/Slider';
 import { socket } from '@/lib/socket';
+import { useRoomWordStore } from '@/store/roomWordStore';
 
-const GameRoom = () => {
+const GamePlay = () => {
+  const { roomId } = useParams();
+
+  const roomWord = useRoomWordStore((state) => state.roomWord);
   const [strokeColor, setStrokeColor] = useColor('black');
   const [strokeWidth, setStrokeWidth] = useState(5);
   const [, setCanvasLoading] = useState(true);
 
   const canvas = useRef<ReactSketchCanvasRef | null>(null);
 
-  const { roomId } = useParams();
-
+  console.log(roomWord);
   useEffect(() => {
     socket.emit('client-ready', { roomId });
 
@@ -53,4 +56,4 @@ const GameRoom = () => {
   );
 };
 
-export default GameRoom;
+export default GamePlay;
