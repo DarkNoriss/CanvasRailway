@@ -7,7 +7,7 @@ import { useEffect } from 'react';
 
 import GameLobby from '@/components/GameLobby';
 import GamePicking from '@/components/GamePicking';
-import GameRoom from '@/components/GameRoom';
+import GamePlay from '@/components/GamePlay';
 import { socket } from '@/lib/socket';
 import { useGameStateStore } from '@/store/gameStatusStore';
 import { useMembersStore } from '@/store/membersStore';
@@ -18,7 +18,7 @@ type GameStateProps = typeof gameState;
 const gameState = {
   GAME_LOBBY: <GameLobby />,
   GAME_PICKING: <GamePicking />,
-  GAME_ROOM: <GameRoom />,
+  GAME_PLAY: <GamePlay />,
 };
 
 const Page = () => {
