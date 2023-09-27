@@ -16,24 +16,27 @@ import {
 import { Input } from '@/components/ui/Input';
 import { socket } from '@/lib/socket';
 import { roomWordSchema } from '@/lib/validations/roomWord';
+import { useGameStateStore } from '@/store/gameStatusStore';
 import { useRoomWordStore } from '@/store/roomWordStore';
 import type { RoomWordType } from '@/types/form';
 
 const TypeWord = () => {
   const { roomId } = useParams();
 
+  const setGameState = useGameStateStore((state) => state.setGameState);
   const setRoomWord = useRoomWordStore((state) => state.setRoomWord);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
     socket.on('start-game', ({ roomWord }) => {
       setRoomWord(roomWord);
+      setGameState('GAME_PLAY');
     });
 
     return () => {
       socket.off('start-game');
     };
-  }, [setRoomWord]);
+  }, [setGameState, setRoomWord]);
 
   const form = useForm<RoomWordType>({
     resolver: zodResolver(roomWordSchema),
