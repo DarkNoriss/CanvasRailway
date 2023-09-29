@@ -7,12 +7,11 @@ import Canvas from '@/components/Canvas';
 import CanvasButtons from '@/components/CanvasButtons';
 import { Slider } from '@/components/ui/Slider';
 import { socket } from '@/lib/socket';
-import { useRoomWordStore } from '@/store/roomWordStore';
 
 const GamePlaying = () => {
   const { roomId } = useParams();
 
-  const roomWord = useRoomWordStore((state) => state.roomWord);
+  // const roomWord = useRoomWordStore((state) => state.roomWord);
   const [strokeColor, setStrokeColor] = useColor('black');
   const [strokeWidth, setStrokeWidth] = useState(5);
   const [, setCanvasLoading] = useState(true);
