@@ -1,8 +1,8 @@
 import { create } from 'zustand';
 
 type GameStateStoreType = {
-  gameState: 'GAME_LOBBY' | 'GAME_PLAY' | 'GAME_PICKING';
-  setGameState: (state: 'GAME_LOBBY' | 'GAME_PLAY' | 'GAME_PICKING') => void;
+  gameState: 'GAME_LOBBY' | 'GAME_PLAYING' | 'GAME_PICKING';
+  setGameState: (state: 'GAME_LOBBY' | 'GAME_PLAYING' | 'GAME_PICKING') => void;
 };
 
 export const useGameStateStore = create<GameStateStoreType>((set) => ({

@@ -30,7 +30,7 @@ const TypeWord = () => {
   useEffect(() => {
     socket.on('start-game', ({ roomWord }) => {
       setRoomWord(roomWord);
-      setGameState('GAME_PLAY');
+      setGameState('GAME_PLAYING');
     });
 
     return () => {

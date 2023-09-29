@@ -1,7 +1,7 @@
 import TypeWord from '@/components/TypeWord';
 import { useUserStore } from '@/store/userStore';
 
-const GamePicking = () => {
+const GamePickingWord = () => {
   const user = useUserStore((state) => state.user);
 
   return (
@@ -17,4 +17,4 @@ const GamePicking = () => {
   );
 };
 
-export default GamePicking;
+export default GamePickingWord;

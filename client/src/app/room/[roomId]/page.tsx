@@ -5,9 +5,9 @@ import 'react-color-palette/css';
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 
-import GameLobby from '@/components/GameLobby';
-import GamePicking from '@/components/GamePicking';
-import GamePlay from '@/components/GamePlay';
+import GameLobby from '@/components/game/GameLobby';
+import GamePickingWord from '@/components/game/GamePickingWord';
+import GamePlaying from '@/components/game/GamePlaying';
 import { socket } from '@/lib/socket';
 import { useGameStateStore } from '@/store/gameStatusStore';
 import { useMembersStore } from '@/store/membersStore';
@@ -17,8 +17,8 @@ import { useUserStore } from '@/store/userStore';
 type GameStateProps = typeof gameState;
 const gameState = {
   GAME_LOBBY: <GameLobby />,
-  GAME_PICKING: <GamePicking />,
-  GAME_PLAY: <GamePlay />,
+  GAME_PICKING: <GamePickingWord />,
+  GAME_PLAYING: <GamePlaying />,
 };
 
 const Page = () => {

@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/Button';
 import { socket } from '@/lib/socket';
 import { useMembersStore } from '@/store/membersStore';
 
-import Countdown from './Countdown';
+import Countdown from '../Countdown';
 
 const GameLobby = () => {
   const [starting, setStarting] = useState(false);

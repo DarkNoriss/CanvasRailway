@@ -9,7 +9,7 @@ import { Slider } from '@/components/ui/Slider';
 import { socket } from '@/lib/socket';
 import { useRoomWordStore } from '@/store/roomWordStore';
 
-const GamePlay = () => {
+const GamePlaying = () => {
   const { roomId } = useParams();
 
   const roomWord = useRoomWordStore((state) => state.roomWord);
@@ -19,7 +19,6 @@ const GamePlay = () => {
 
   const canvas = useRef<ReactSketchCanvasRef | null>(null);
 
-  console.log(roomWord);
   useEffect(() => {
     socket.emit('client-ready', { roomId });
 
@@ -56,4 +55,4 @@ const GamePlay = () => {
   );
 };
 
-export default GamePlay;
+export default GamePlaying;
