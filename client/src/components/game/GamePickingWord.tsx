@@ -1,8 +1,26 @@
+import { useEffect } from 'react';
+
 import TypeWord from '@/components/TypeWord';
+import { socket } from '@/lib/socket';
+import { useGameStateStore } from '@/store/gameStatusStore';
+import { useRoomWordStore } from '@/store/roomWordStore';
 import { useUserStore } from '@/store/userStore';
 
 const GamePickingWord = () => {
   const user = useUserStore((state) => state.user);
+  const setGameState = useGameStateStore((state) => state.setGameState);
+  const setRoomWord = useRoomWordStore((state) => state.setRoomWord);
+
+  useEffect(() => {
+    socket.on('start-game', ({ roomWord }) => {
+      setRoomWord(roomWord);
+      setGameState('GAME_PLAYING');
+    });
+
+    return () => {
+      socket.off('start-game');
+    };
+  }, [setGameState, setRoomWord]);
 
   return (
     <div className="flex justify-center">

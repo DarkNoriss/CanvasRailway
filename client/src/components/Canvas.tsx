@@ -1,57 +1,83 @@
 import { useParams } from 'next/navigation';
-import type { MutableRefObject } from 'react';
-import { useEffect } from 'react';
-import type { CanvasPath, ReactSketchCanvasRef } from 'react-sketch-canvas';
-import { ReactSketchCanvas } from 'react-sketch-canvas';
+import { useEffect, useRef, useState } from 'react';
+import CanvasDraw from 'react-canvas-draw';
 
 import { socket } from '@/lib/socket';
+import { useUserStore } from '@/store/userStore';
 
-type CanvasProps = {
-  canvas: MutableRefObject<ReactSketchCanvasRef | null>;
-  strokeWidth: number;
-  strokeColor: string;
-};
-
-const Canvas = ({ canvas, strokeWidth, strokeColor }: CanvasProps) => {
+const Canvas = () => {
   const { roomId } = useParams();
 
+  const user = useUserStore((state) => state.user);
+
+  const [size, setSize] = useState({ height: 200, width: 200 });
+  const [cavnasState, setCavnasState] = useState<string>('');
+
+  const container = useRef<HTMLDivElement | null>(null);
+
+  const canvasRef = useRef<CanvasDraw | null>(null);
+
   useEffect(() => {
-    socket.on('get-canvas-paths', async () => {
-      const canvasPaths = await canvas.current?.exportPaths();
-      if (!canvasPaths) return;
-
-      socket.emit('send-canvas-paths', { canvasPaths, roomId });
+    socket.on('canvas-whole', ({ wholeCanvas }) => {
+      setCavnasState(wholeCanvas);
     });
 
-    socket.on('canvas-paths-from-server', ({ canvasPaths }) => {
-      canvas.current?.loadPaths(canvasPaths);
+    socket.on('get-canvas', async () => {
+      const canvas = await canvasRef.current?.getSaveData();
+      if (!canvas) return;
+
+      socket.emit('send-canvas', { canvas, roomId });
     });
 
-    socket.on('canvas-draw', ({ canvasPaths }) => {
-      canvas.current?.loadPaths(canvasPaths);
+    socket.on('load-canvas', ({ canvas }) => {
+      setCavnasState(canvas);
     });
 
     return () => {
-      socket.off('get-canvas-paths');
-      socket.off('canvas-paths-from-server');
-      socket.off('canvas-draw');
+      socket.off('get-canvas');
+      socket.off('canvas-whole');
     };
-  }, [canvas, roomId]);
+  }, [roomId]);
 
-  const handleOnStroke = (canvasPaths: CanvasPath) => {
-    if (canvasPaths.paths.length === 1) return;
+  const handleResize = () => {
+    if (container.current) {
+      const height = container.current.clientHeight;
+      const width = container.current.clientWidth;
+      setSize({ height, width });
+    }
+  };
 
-    socket.emit('canvas-draw', { canvasPaths, roomId });
+  useEffect(() => {
+    window.addEventListener('resize', handleResize);
+
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
+
+  useEffect(() => {
+    handleResize();
+  }, []);
+
+  const gay = (canvas: CanvasDraw) => {
+    if (!user?.isDrawing) return;
+    const wholeCanvas = canvas.getSaveData();
+
+    socket.emit('canvas-whole', { wholeCanvas, roomId });
   };
 
   return (
-    <ReactSketchCanvas
-      ref={canvas}
-      strokeWidth={strokeWidth}
-      strokeColor={strokeColor}
-      onStroke={handleOnStroke}
-      className="rounded"
-    />
+    <div ref={container} className="h-full w-full">
+      <CanvasDraw
+        ref={canvasRef}
+        hideGrid
+        canvasHeight={size.height}
+        canvasWidth={size.width}
+        disabled={!user?.isDrawing}
+        onChange={gay}
+        saveData={cavnasState}
+      />
+    </div>
   );
 };
 

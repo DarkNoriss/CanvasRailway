@@ -56,6 +56,9 @@ dependencies:
   react:
     specifier: ^18.2.0
     version: 18.2.0
+  react-canvas-draw:
+    specifier: ^1.2.1
+    version: 1.2.1(react@18.2.0)
   react-color-palette:
     specifier: ^7.1.0
     version: 7.1.0(react@18.2.0)
@@ -109,6 +112,9 @@ devDependencies:
   '@types/react':
     specifier: ^18.2.22
     version: 18.2.22
+  '@types/react-canvas-draw':
+    specifier: ^1.2.1
+    version: 1.2.1
   '@types/react-color':
     specifier: ^3.0.6
     version: 3.0.6
@@ -1599,6 +1605,12 @@ packages:
   /@types/prop-types@15.7.7:
     resolution: {integrity: sha512-FbtmBWCcSa2J4zL781Zf1p5YUBXQomPEcep9QZCfRfQgTxz3pJWiDFLebohZ9fFntX5ibzOkSsrJ0TEew8cAog==}
 
+  /@types/react-canvas-draw@1.2.1:
+    resolution: {integrity: sha512-5RftvS39lIE1ra6MQqGwsayp1OIfoM3IHTddiyfvAshObCxgqtPSPt3SAv2kHHXtlMZ1STTmCXQMnpRV02OEYw==}
+    dependencies:
+      '@types/react': 18.2.22
+    dev: true
+
   /@types/react-color@3.0.6:
     resolution: {integrity: sha512-OzPIO5AyRmLA7PlOyISlgabpYUa3En74LP8mTMa0veCA719SvYQov4WLMsHvCgXP+L+KI9yGhYnqZafVGG0P4w==}
     dependencies:
@@ -2218,6 +2230,10 @@ packages:
       ansicolors: 0.3.2
       redeyed: 2.1.1
     dev: true
+
+  /catenary-curve@1.0.1:
+    resolution: {integrity: sha512-vSHQtYFjItV4wxUH5OkicA3Kmln6thBBWlJLiw2f4apfvkKw4BVe8bTbG6lnbJe60CIr8PyHzjSX27blSJ07Ww==}
+    dev: false
 
   /chalk@2.4.2:
     resolution: {integrity: sha512-Mti+f9lpJNcwF4tWV8/OrTTtF1gZi+f8FqlyAdouralcFWFQWF2+NgCHShjkCb+IFBLq9buZwE1xckQU4peSuQ==}
@@ -4701,6 +4717,10 @@ packages:
     engines: {node: '> 0.8'}
     dev: true
 
+  /lazy-brush@1.0.1:
+    resolution: {integrity: sha512-xT/iSClTVi7vLoF8dCWTBhCuOWqsLXCMPa6ucVmVAk6hyNCM5JeS1NLhXqIrJktUg+caEYKlqSOUU4u3cpXzKg==}
+    dev: false
+
   /levn@0.4.1:
     resolution: {integrity: sha512-+bT2uH4E5LGE7h/n3evcS/sQlJXCpIp6ym8OWJ5eV6+67Dsql/LaaT7qJBAt2rzfoa/5QBGBhxDix1dMt2kQKQ==}
     engines: {node: '>= 0.8.0'}
@@ -6132,6 +6152,18 @@ packages:
       strip-json-comments: 2.0.1
     dev: true
 
+  /react-canvas-draw@1.2.1(react@18.2.0):
+    resolution: {integrity: sha512-mCHE+Q91a26gUhyraHONedmbCI7dF/4BKdOxba7s4538QNfFWv/NfzLXWZrmjAQ4tO1vTvO+axX5YGIFjGc6uw==}
+    peerDependencies:
+      react: 16.x || 17.x
+    dependencies:
+      catenary-curve: 1.0.1
+      lazy-brush: 1.0.1
+      prop-types: 15.8.1
+      react: 18.2.0
+      resize-observer-polyfill: 1.5.1
+    dev: false
+
   /react-color-palette@7.1.0(react@18.2.0):
     resolution: {integrity: sha512-F5jMWOWh7FMkgm7aJfwNr5+TatvGKvQatuaDtw8trSU4yKk0bzcxOC7HFYVRs/9qEJ8kvatjWaUUrcQATYSXhw==}
     engines: {node: '>=10'}
@@ -6393,6 +6425,10 @@ packages:
   /requires-port@1.0.0:
     resolution: {integrity: sha512-KigOCHcocU3XODJxsu8i/j8T9tzT4adHiecwORRQ0ZZFcp7ahwXuRU1m+yuO90C5ZUyGeGfocHDI14M3L3yDAQ==}
     dev: true
+
+  /resize-observer-polyfill@1.5.1:
+    resolution: {integrity: sha512-LwZrotdHOo12nQuZlHEmtuXdqGoOD0OhaxopaNFxWzInpEgaLWoVuAMbTzixuosCx2nEG58ngzW3vxdWoxIgdg==}
+    dev: false
 
   /resolve-dir@1.0.1:
     resolution: {integrity: sha512-R7uiTjECzvOsWSfdM0QKFNBVFcK27aHOUwdvK53BcW8zqnGdYp0Fbj82cy54+2A4P2tFM22J5kRfe1R+lM/1yg==}

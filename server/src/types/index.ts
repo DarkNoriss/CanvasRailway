@@ -1,5 +1,5 @@
 export type RoomCanvas = RoomId & {
-  canvasPaths: CanvasPath;
+  canvas: string;
 };
 
 export type RoomData = RoomId & {
@@ -36,6 +36,12 @@ type CanvasPath = {
   endTimestamp?: number;
 };
 
-export type WordType = RoomId & {
+export type GameRoomsType = RoomId & {
+  gameStarted: boolean;
+  roomWord: string;
+  gameStage: string;
+};
+
+export type SubmitWordType = RoomId & {
   roomWord: string;
 };

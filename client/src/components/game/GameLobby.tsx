@@ -26,22 +26,12 @@ const GameLobby = () => {
   };
 
   return (
-    <div className="flex flex-row">
-      <div className="flex flex-col px-4">
-        <span>Members: </span>
-        <ol>
-          {members.map(({ id, username }) => (
-            <li key={id} className="ml-4 list-disc">
-              {username}
-            </li>
-          ))}
-        </ol>
-      </div>
-      <div>
-        <Button onClick={handleOnClick}>START GAME</Button>
-      </div>
+    <>
+      <Button onClick={handleOnClick} className="p-8 text-4xl">
+        START GAME
+      </Button>
       {starting && <Countdown />}
-    </div>
+    </>
   );
 };
 

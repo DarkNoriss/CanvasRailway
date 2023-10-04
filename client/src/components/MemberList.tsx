@@ -26,9 +26,9 @@ const MemberList = () => {
   }, [setMembers, setUser, user?.id]);
 
   return (
-    <div className="flex flex-[0_0_20vw] flex-col">
+    <div className="flex max-w-[224px] flex-[1_1_20vw] flex-col p-4">
       <ScrollArea>
-        <h2 className="text-2xl">Members:</h2>
+        <h2 className="pb-4 text-2xl">Members:</h2>
         <ol className="pl-5">
           {membersStore.map(({ id, username }) => (
             <li

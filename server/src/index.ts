@@ -3,9 +3,9 @@ import express from 'express';
 import http from 'http';
 import { Server } from 'socket.io';
 
+import { addWord, createRoom } from './data/gameRooms';
 import { getRoomMembers, setUserDrawing } from './data/users';
-import { addWord } from './data/words';
-import type { RoomCanvas, RoomData, RoomDraw, RoomId, WordType } from './types';
+import type { RoomCanvas, RoomData, RoomId, SubmitWordType } from './types';
 import { joinRoom } from './utils/joinRoom';
 import { leaveRoom } from './utils/leaveRoom';
 
@@ -61,38 +61,33 @@ io.on('connection', (socket) => {
 
     if (!adminMember) return;
 
-    socket.to(adminMember.id).emit('get-canvas-paths');
+    socket.to(adminMember.id).emit('get-canvas');
   });
 
-  socket.on('send-canvas-paths', ({ canvasPaths, roomId }: RoomCanvas) => {
+  socket.on('send-canvas', ({ canvas, roomId }: RoomCanvas) => {
     const members = getRoomMembers(roomId);
     const lastMember = members[members.length - 1];
 
     if (!lastMember) return;
 
-    socket.to(lastMember.id).emit('canvas-paths-from-server', { canvasPaths });
-  });
-
-  socket.on('canvas-draw', ({ canvasPaths, roomId }: RoomDraw) => {
-    socket.to(roomId).emit('canvas-draw', { canvasPaths });
-  });
-
-  socket.on('canvas-undo', ({ roomId }: RoomId) => {
-    socket.to(roomId).emit('canvas-undo');
-  });
-
-  socket.on('canvas-redo', ({ roomId }: RoomId) => {
-    socket.to(roomId).emit('canvas-redo');
-  });
-
-  socket.on('canvas-clear', ({ roomId }: RoomId) => {
-    socket.to(roomId).emit('canvas-clear');
+    socket.to(lastMember.id).emit('load-canvas', { canvas });
   });
 
   socket.on('start-lobby', ({ roomId }: RoomId) => {
     socket.emit('start-lobby');
     socket.to(roomId).emit('start-lobby');
+    const roomWord = '';
+    const gameStarted = true;
+    const gameStage = 'picking';
 
+    const room = {
+      roomId,
+      roomWord,
+      gameStarted,
+      gameStage,
+    };
+
+    createRoom(room);
     setUserDrawing(roomId);
 
     const members = getRoomMembers(roomId);
@@ -101,17 +96,19 @@ io.on('connection', (socket) => {
     socket.to(roomId).emit('update-members', { members });
   });
 
-  socket.on('submit-word', ({ roomId, roomWord }: WordType) => {
-    const newWord = {
-      roomId,
-      roomWord,
-    };
-
-    addWord(newWord);
+  socket.on('submit-word', ({ roomId, roomWord }: SubmitWordType) => {
+    addWord({ roomId, roomWord });
 
     socket.emit('start-game', { roomWord });
     socket.to(roomId).emit('start-game', { roomWord });
   });
+
+  socket.on(
+    'canvas-whole',
+    ({ wholeCanvas, roomId }: { wholeCanvas: string; roomId: string }) => {
+      socket.to(roomId).emit('canvas-whole', { wholeCanvas });
+    },
+  );
 
   socket.on('disconnect', () => {
     leaveRoom(socket);
